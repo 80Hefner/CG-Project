@@ -1,2 +1,2 @@
 # CG
-Computer Graphics
+CG's Project
