@@ -1,4 +1,5 @@
-// Aqui é apra fazer os pontos das cenas
+#define _USE_MATH_DEFINES // always before the include
+
 #include "ponto.h"
 #include <math.h>
 #include <vector>
@@ -121,6 +122,37 @@ vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 
 			}
 		}
+	}
+
+	return pontos;
+}
+
+
+//Criação de um cone com um dado raio, uma altura, nr slices e de stacks
+vector<Ponto> cone(float raioBase, float altura, int nrSlices, int nrStacks) {
+	
+	vector<Ponto> pontos;
+
+	float defaultAngleFatia = (2 * M_PI) / nrSlices;
+
+	for (int fatiaNr = 0; fatiaNr < nrSlices; fatiaNr++) {
+
+		float angulo = fatiaNr * defaultAngleFatia;
+		float proxAngulo = angulo + defaultAngleFatia;
+
+
+		//Base
+		pontos.push_back(Ponto(0.0f, -altura / 2, 0.0f));
+		pontos.push_back(Ponto(raioBase * cos(angulo), -altura / 2, raioBase * sin(angulo)));
+		pontos.push_back(Ponto(raioBase * cos(proxAngulo), -altura / 2, raioBase * sin(proxAngulo)));
+
+		for (int nrCamada = 1; nrCamada < nrStacks; nrCamada++) {
+
+		}
+
+		//pontos.push_back(Ponto());
+		//pontos.push_back(Ponto());
+		//pontos.push_back(Ponto());
 	}
 
 	return pontos;

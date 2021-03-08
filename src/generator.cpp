@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, char** argv) {
 
     if (strcmp(argv[1], "plane") == 0) {
-        vector<Ponto> pontos = plane(argv[2]);
+        //vector<Ponto> pontos = plane(argv[2]);
     }
 
 }
