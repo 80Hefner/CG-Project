@@ -1,0 +1,3 @@
+/home/hefner/github/CG/src/Generator/build/CMakeFiles/rebuild_cache.dir
+/home/hefner/github/CG/src/Generator/build/CMakeFiles/edit_cache.dir
+/home/hefner/github/CG/src/Generator/build/CMakeFiles/projeto.dir

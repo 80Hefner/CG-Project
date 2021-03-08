@@ -1,16 +1,17 @@
 #define _USE_MATH_DEFINES // always before the include
 
-#include "ponto.h"
 #include <math.h>
 #include <vector>
+
+#include "../utils/ponto.h"
 
 using namespace std;
 
 
-// Criação de um plano na superfície do plano XZ.
-vector<Ponto> plano(float size) {
-	
-	//vector<Ponto> é o mesmo que ter um array dinamico de Ponto
+// Criaï¿½ï¿½o de um plano na superfï¿½cie do plano XZ.
+vector<Ponto> plane(float size) {
+
+	//vector<Ponto> ï¿½ o mesmo que ter um array dinamico de Ponto
 	vector<Ponto> pontos;
 
 	float distancia = size / 2;
@@ -29,7 +30,7 @@ vector<Ponto> plano(float size) {
 
 
 vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dimY, float dimZ, int divX, int divY, int divZ) {
-	
+
 	vector<Ponto> pontos;
 
 	//CONTRUINDO POR FACES TEMOS:
@@ -53,7 +54,7 @@ vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dim
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + divZ * dimZ));
 
-	
+
 	//Frente
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, iniZ));
 	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - dimY * dimY, iniZ));
@@ -63,7 +64,7 @@ vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dim
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, iniZ));
 	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (dimY + 1) * dimY, iniZ));
 
-	//Trás
+	//Trï¿½s
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, -iniZ));
 	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (dimY + 1) * dimY, -iniZ));
 	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - dimY * dimY, -iniZ));
@@ -72,7 +73,7 @@ vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dim
 	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (dimY + 1) * dimY, -iniZ));
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, -iniZ));
 
-	
+
 	//Direita
 	pontos.push_back(Ponto(iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
 	pontos.push_back(Ponto(iniX, iniY - (divY + 1) * dimY, iniZ - (divZ + 1) * dimZ));
@@ -95,29 +96,29 @@ vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dim
 	return pontos;
 }
 
-// Criação de uma box com as dimensões dadas e com um numero de Divisões em iguais secções da caixa
+// Criaï¿½ï¿½o de uma box com as dimensï¿½es dadas e com um numero de Divisï¿½es em iguais secï¿½ï¿½es da caixa
 vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
-	
+
 	vector<Ponto> pontos;
 
 	float inicialX = dimX / 2;
 	float inicialY = dimY / 2;
 	float inicialZ = dimZ / 2;
-	
+
 	float distanicaX = dimX / nrDivisoes;
 	float distanicaY = dimY / nrDivisoes;
 	float distanicaZ = dimZ / nrDivisoes;
 
-	// Se tivermos 2 divisões, pasamos a ter 8 cubos. 
-	// Temos de fazer então 3 for (um para a divisão em cada eixo)
+	// Se tivermos 2 divisï¿½es, pasamos a ter 8 cubos.
+	// Temos de fazer entï¿½o 3 for (um para a divisï¿½o em cada eixo)
 	for (int divX = 0; divX < nrDivisoes; divX++) {
 		for (int divY = 0; divY < nrDivisoes; divY++) {
 			for (int divZ = 0; divZ < nrDivisoes; divZ++) {
 
-				//Cria um vector de Pontos para todos os cubos que vão fazer parte da Box
+				//Cria um vector de Pontos para todos os cubos que vï¿½o fazer parte da Box
 				vector<Ponto> novosPontos = criaCubo(inicialX, inicialY, inicialZ, distanicaX, distanicaY, distanicaZ, divX, divY, divZ);
 
-				//Junta os pontos de um cubinho aos pontos que já tinha de cubos anteriores que formavam a caixa
+				//Junta os pontos de um cubinho aos pontos que jï¿½ tinha de cubos anteriores que formavam a caixa
 				pontos.insert(pontos.end(), novosPontos.begin(), novosPontos.end());
 
 			}
@@ -128,9 +129,9 @@ vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 }
 
 
-//Criação de um cone com um dado raio, uma altura, nr slices e de stacks
+//Criaï¿½ï¿½o de um cone com um dado raio, uma altura, nr slices e de stacks
 vector<Ponto> cone(float raioBase, float altura, int nrSlices, int nrStacks) {
-	
+
 	vector<Ponto> pontos;
 
 	float defaultAngleFatia = (2 * M_PI) / nrSlices;

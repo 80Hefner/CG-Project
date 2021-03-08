@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hefner/github/CG/src/Generator/generator.cpp
+vector
+-
+string.h
+-
+iostream
+-
+fstream
+-
+../utils/ponto.h
+/home/hefner/github/CG/src/utils/ponto.h
+primitives.cpp
+/home/hefner/github/CG/src/Generator/primitives.cpp
+
+/home/hefner/github/CG/src/Generator/primitives.cpp
+math.h
+-
+vector
+-
+../utils/ponto.h
+/home/hefner/github/CG/src/utils/ponto.h
+
+/home/hefner/github/CG/src/utils/ponto.h
+
