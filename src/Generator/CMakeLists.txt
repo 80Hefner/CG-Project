@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Project Name
-PROJECT(projeto)
+PROJECT(generator)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(${PROJECT_NAME} generator.cpp)
+add_executable(${PROJECT_NAME} generator.cpp ../utils/ponto.cpp primitives.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})

@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "../utils/ponto.h"
-#include "primitives.cpp"
+#include "primitives.h"
 
 using namespace std;
 
@@ -36,6 +36,21 @@ int main(int argc, char** argv) {
         pontos = plane(size);
 
         fileString = argv[3];
+        fileString = "../../../files3D/" + fileString;
+        //fileString = strcat("../../../files3D/", fileString);
+
+        writePointsToFile(pontos, fileString);
+    }
+    else if (argc >= 6 && strcmp(argv[1], "box") == 0) {
+        int i = 2;
+        float dimX = atof(argv[i++]); // i=2
+        float dimY = atof(argv[i++]); // i=3
+        float dimZ = atof(argv[i++]); // i=4
+        int divisions = 1;
+        if (argc == 7) divisions = atoi(argv[i++]); // i=5
+        pontos = box(dimX, dimY, dimZ, divisions);
+
+        fileString = argv[i]; // i=5 or 6
         fileString = "../../../files3D/" + fileString;
         //fileString = strcat("../../../files3D/", fileString);
 

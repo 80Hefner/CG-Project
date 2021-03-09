@@ -2,7 +2,9 @@
 
 #include <math.h>
 #include <vector>
+#include <string.h>
 
+#include "primitives.h"
 #include "../utils/ponto.h"
 
 using namespace std;
@@ -28,15 +30,22 @@ vector<Ponto> plane(float size) {
 
 }
 
-
 vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dimY, float dimZ, int divX, int divY, int divZ) {
 
 	vector<Ponto> pontos;
 
 	//CONTRUINDO POR FACES TEMOS:
 
+	// Plano xz pos
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + divZ * dimZ));
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + divZ * dimZ));
 
-	//Baixo
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + divZ * dimZ));
+
+	// Plano xz neg
 	pontos.push_back(Ponto(-iniX + divX * dimX, -iniY, -iniZ + (divZ + 1) * dimZ));
 	pontos.push_back(Ponto(-iniX + divX * dimX, -iniY, -iniZ + divZ * dimZ));
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, -iniY, -iniZ + divZ * dimZ));
@@ -45,36 +54,26 @@ vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dim
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, -iniY, -iniZ + divZ * dimZ));
 	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, -iniY, -iniZ + (divZ + 1) * dimZ));
 
-	//Cima
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + divZ * dimZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + divZ * dimZ));
+	// Plano xy pos
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, iniZ));
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - divY * dimY, iniZ));
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, iniZ));
 
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + divZ * dimZ));
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - (divY + 1) * dimY, iniZ));
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, iniZ));
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, iniZ));
 
+	// Plano xy neg
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, -iniZ));
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, -iniZ));
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - divY * dimY, -iniZ));
 
-	//Frente
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - dimY * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (dimY + 1) * dimY, iniZ));
-
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - (dimY + 1) * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (dimY + 1) * dimY, iniZ));
-
-	//Tr�s
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (dimY + 1) * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - dimY * dimY, -iniZ));
-
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - (dimY + 1) * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (dimY + 1) * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - dimY * dimY, -iniZ));
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - (divY + 1) * dimY, -iniZ));
+	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, -iniZ));
+	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, -iniZ));
 
 
-	//Direita
+	// Plano yz pos
 	pontos.push_back(Ponto(iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
 	pontos.push_back(Ponto(iniX, iniY - (divY + 1) * dimY, iniZ - (divZ + 1) * dimZ));
 	pontos.push_back(Ponto(iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
@@ -83,14 +82,14 @@ vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dim
 	pontos.push_back(Ponto(iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
 	pontos.push_back(Ponto(iniX, iniY - divY * dimY, iniZ - divZ * dimZ));
 
-	//Esquerda
+	// Plano yz neg
 	pontos.push_back(Ponto(-iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
-	pontos.push_back(Ponto(-iniX, iniY - (divY + 1) * dimY, iniZ - (divZ + 1) * dimZ));
 	pontos.push_back(Ponto(-iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
+	pontos.push_back(Ponto(-iniX, iniY - (divY + 1) * dimY, iniZ - (divZ + 1) * dimZ));
 
 	pontos.push_back(Ponto(-iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
-	pontos.push_back(Ponto(-iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
 	pontos.push_back(Ponto(-iniX, iniY - divY * dimY, iniZ - divZ * dimZ));
+	pontos.push_back(Ponto(-iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
 
 
 	return pontos;
@@ -127,7 +126,6 @@ vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 
 	return pontos;
 }
-
 
 //Cria��o de um cone com um dado raio, uma altura, nr slices e de stacks
 vector<Ponto> cone(float raioBase, float altura, int nrSlices, int nrStacks) {
