@@ -12,7 +12,9 @@
 #include <fstream>
 
 #include "../utils/ponto.h"
+#include "../utils/tinyxml2.h"
 
+using namespace tinyxml2;
 using namespace std;
 
 // Vector with all objects
@@ -155,19 +157,19 @@ void reageEventoChar(unsigned char key, int x, int y) {
 }
 
 
-void load3dFiles(vector<string> _3dFilesList) {
+int load3dFiles(vector<string> _3dFilesList) {
     string line;
     string delim = ", ";
     ifstream file;
 
 	for (int i = 0; i < _3dFilesList.size(); i++) {
-		file.open(_3dFilesList[i], ios::in);
+		file.open(_3dFilesList[i].c_str(), ios::in);
 		getline(file, line);
 		int nr_points = atoi(line.c_str());
 		vector<Ponto> points;
 
 		if (file.is_open()) {
-			for (int i = 0; i < nr_points; i++) {
+			for (int j = 0; j < nr_points; j++) {
 				getline(file, line);
 				Ponto p = Ponto(line);
 				points.push_back(p);
@@ -176,34 +178,69 @@ void load3dFiles(vector<string> _3dFilesList) {
 		}
 		else {
 			cout << "Unable to open file!\n";
+			return 0;
 		}
 
 		objects.push_back(points);
 	}
 
+	return 1;
+}
+
+int loadXMLFile(string xmlFileString) {
+	 XMLDocument doc;
+	 vector<string> _3dFilesList;
+
+	 // Trying to open XML File
+	 XMLError load_result = doc.LoadFile(xmlFileString.c_str());
+	 if (load_result != XML_SUCCESS)  {
+		 cout << "Unable to load XML File!\n";
+		 return 0;
+	 }
+
+	 // Trying to get scene element
+	 XMLElement* root = doc.FirstChildElement("scene");
+	 if (root == nullptr) {
+		 cout << "XML File has wrong sintax! -> scene element\n";
+		 return 0;
+	 }
+
+	 // Trying to get first model element (folder path)
+	 XMLElement* element = root->FirstChildElement("model");
+	 if (element == nullptr) {
+		 cout << "XML File has wrong sintax! -> first model element\n";
+		 return 0;
+	 }
+	 string folder = element->Attribute("folder");
+
+	 // Reading .3d files
+	 while (element = element->NextSiblingElement()) {
+		 string file = element->Attribute("file");
+
+		 _3dFilesList.push_back(folder + file);
+	 }
+
+	 // init 3d models
+	 return (load3dFiles(_3dFilesList));
 }
 
 int main(int argc, char **argv) {
 
     if (argc > 1) {
-        //string xmlFileString = argv[1];
-        //xmlFileString = "../../filesXML/" + xmlFileString; // TODO: ler do xml
-
-        vector<string> _3dFilesList;
-		_3dFilesList.push_back("../../files3D/cone.3d");
-		_3dFilesList.push_back("../../files3D/box.3d");
-		_3dFilesList.push_back("../../files3D/plane.3d");
-		_3dFilesList.push_back("../../files3D/sphere.3d");
-
-        // init 3d models
-        load3dFiles(_3dFilesList);
+		// load XML file
+        string xmlFileString = argv[1];
+    	xmlFileString = "../../filesXML/" + xmlFileString;
+		if (loadXMLFile(xmlFileString) == 0) {
+			cout << "Error reading XML File!\n";
+			return 0;
+		}
 
 		// init GLUT and the window
 		glutInit(&argc, argv);
 		glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
-		glutInitWindowPosition(100,100);
-		glutInitWindowSize(800,800);
-		glutCreateWindow("CG@DI-UM");
+		glutInitWindowPosition(0,0);
+		glutInitWindowSize(glutGet(GLUT_SCREEN_WIDTH),glutGet(GLUT_SCREEN_HEIGHT));
+		glutCreateWindow("FASE 1");
 
 		// Required callback registry
 		glutDisplayFunc(renderScene);

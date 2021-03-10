@@ -1,4 +1,4 @@
 <scene>
     <model folder = "../../files3D/" />
-    <model file = "plane.3d" />
+    <model file = "sphere.3d" />
 </scene>
