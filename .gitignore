@@ -1,6 +1,6 @@
 # Project excluded paths
 /.idea
-/src/build
-/src/cmake-build-debug
-/src/Engine/cmake-build-debug
-/src/Generator/cmake-build-debug
+/Fase1/src/build
+/Fase1/src/cmake-build-debug
+/Fase1/src/Engine/cmake-build-debug
+/Fase1/src/Generator/cmake-build-debug
