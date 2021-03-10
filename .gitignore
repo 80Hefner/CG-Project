@@ -1,4 +1,4 @@
 # Project excluded paths
 /.idea
-/src/Engine/build
-/src/Generator/build
+/src/build
+/src/build

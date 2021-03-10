@@ -128,30 +128,55 @@ vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 }
 
 //Cria��o de um cone com um dado raio, uma altura, nr slices e de stacks
-vector<Ponto> cone(float raioBase, float altura, int nrSlices, int nrStacks) {
+vector<Ponto> cone(float raioBase, float alturaCone, int nrSlices, int nrStacks) {
 
 	vector<Ponto> pontos;
 
 	float defaultAngleFatia = (2 * M_PI) / nrSlices;
+	float alturaStack = alturaCone / nrStacks;
+	float mudancaRaioStack = raioBase / nrStacks;
 
 	for (int fatiaNr = 0; fatiaNr < nrSlices; fatiaNr++) {
 
 		float angulo = fatiaNr * defaultAngleFatia;
 		float proxAngulo = angulo + defaultAngleFatia;
 
+		float alturaAtual = 0;
+		float proxAltura = alturaStack;
 
-		//Base
-		pontos.push_back(Ponto(0.0f, -altura / 2, 0.0f));
-		pontos.push_back(Ponto(raioBase * cos(angulo), -altura / 2, raioBase * sin(angulo)));
-		pontos.push_back(Ponto(raioBase * cos(proxAngulo), -altura / 2, raioBase * sin(proxAngulo)));
+		float raioAtual = raioBase;
+		float proxRaio = raioBase - mudancaRaioStack;
+
+
+		// Base
+		pontos.push_back(Ponto(0.0f, 0.0f, 0.0f));
+		pontos.push_back(Ponto(raioBase * cos(angulo), 0.0f, raioBase * sin(angulo)));
+		pontos.push_back(Ponto(raioBase * cos(proxAngulo), 0.0f, raioBase * sin(proxAngulo)));
 
 		for (int nrCamada = 1; nrCamada < nrStacks; nrCamada++) {
 
+			//Triangulo de stacks intermédias que compõe um quadrado
+			pontos.push_back(Ponto(proxRaio * cos(proxAngulo), proxAltura, proxRaio * sin(proxAngulo)));
+			pontos.push_back(Ponto(raioAtual * cos(proxAngulo), alturaAtual, raioAtual * sin(proxAngulo)));
+			pontos.push_back(Ponto(raioAtual * cos(angulo), alturaAtual, raioAtual * sin(angulo)));
+
+			//Triangulo de stacks intermédias que compõe um quadrado
+			pontos.push_back(Ponto(proxRaio * cos(angulo), proxAltura, proxRaio * sin(angulo)));
+			pontos.push_back(Ponto(proxRaio * cos(proxAngulo), proxAltura, proxRaio * sin(proxAngulo)));
+			pontos.push_back(Ponto(raioAtual * cos(angulo), alturaAtual, raioAtual * sin(angulo)));
+
+			alturaAtual += alturaStack;
+			proxAltura += alturaStack;
+
+			raioAtual -= mudancaRaioStack;
+			proxRaio -= mudancaRaioStack;
 		}
 
-		//pontos.push_back(Ponto());
-		//pontos.push_back(Ponto());
-		//pontos.push_back(Ponto());
+		//Triângulos ultima stack
+		pontos.push_back(Ponto(raioAtual * cos(proxAngulo), alturaAtual, raioAtual * sin(proxAngulo)));
+		pontos.push_back(Ponto(raioAtual * cos(angulo), alturaAtual, raioAtual * sin(angulo)));
+		pontos.push_back(Ponto(0.0f, alturaCone, 0.0f));
+
 	}
 
 	return pontos;

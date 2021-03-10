@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -147,9 +148,9 @@ int main(int argc, char **argv) {
 
     if (argc > 1) {
         string xmlFileString = argv[1];
-        xmlFileString = "../../../filesXML/" + xmlFileString; // TODO: ler do xml
+        xmlFileString = "../../filesXML/" + xmlFileString; // TODO: ler do xml
 
-        string pointsFileString = "../../../files3D/box.3d";
+        string pointsFileString = "../../files3D/cone.3d";
         // init 3d models
         load3dFiles(pointsFileString);
 

@@ -51,9 +51,24 @@ int main(int argc, char** argv) {
         pontos = box(dimX, dimY, dimZ, divisions);
 
         fileString = argv[i]; // i=5 or 6
-        fileString = "../../../files3D/" + fileString;
+        fileString = "../../files3D/" + fileString;
         //fileString = strcat("../../../files3D/", fileString);
 
         writePointsToFile(pontos, fileString);
     }
+    else if (argc == 7 && strcmp(argv[1], "cone") == 0) {
+        float radius = atof(argv[2]);
+        float height = atof(argv[3]);
+        int slices = atoi(argv[4]);
+        int stacks = atoi(argv[5]);
+
+        pontos = cone(radius, height, slices, stacks);
+
+        fileString = argv[6];
+        fileString = "../../files3D/" + fileString;
+        //fileString = strcat("../../../files3D/", fileString);
+
+        writePointsToFile(pontos, fileString);
+    }
+
 }
