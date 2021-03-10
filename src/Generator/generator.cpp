@@ -13,6 +13,7 @@ using namespace std;
 void writePointsToFile(vector<Ponto> points, string fileString) {
     ofstream file;
     file.open(fileString, ios::out | ios::trunc);
+    file << points.size() << "\n";
 
     for(Ponto p : points) {
         float px = p.getX();
@@ -36,8 +37,7 @@ int main(int argc, char** argv) {
         pontos = plane(size);
 
         fileString = argv[3];
-        fileString = "../../../files3D/" + fileString;
-        //fileString = strcat("../../../files3D/", fileString);
+        fileString = "../../files3D/" + fileString;
 
         writePointsToFile(pontos, fileString);
     }
@@ -52,7 +52,6 @@ int main(int argc, char** argv) {
 
         fileString = argv[i]; // i=5 or 6
         fileString = "../../files3D/" + fileString;
-        //fileString = strcat("../../../files3D/", fileString);
 
         writePointsToFile(pontos, fileString);
     }
@@ -66,7 +65,18 @@ int main(int argc, char** argv) {
 
         fileString = argv[6];
         fileString = "../../files3D/" + fileString;
-        //fileString = strcat("../../../files3D/", fileString);
+
+        writePointsToFile(pontos, fileString);
+    }
+    else if (argc == 6 && strcmp(argv[1], "sphere") == 0) {
+        float radius = atof(argv[2]);
+        int slices = atoi(argv[3]);
+        int stacks = atoi(argv[4]);
+
+        pontos = sphere(radius, slices, stacks);
+
+        fileString = argv[5];
+        fileString = "../../files3D/" + fileString;
 
         writePointsToFile(pontos, fileString);
     }

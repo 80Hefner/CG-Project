@@ -202,22 +202,22 @@ vector<Ponto> sphere(float raio, int nrSlices, int nrStacks) {
 
 		//Podemos tentar arranjar e colocar tudo dentro do mesmo for com if's da primeira e ultima posição
 
-		//Triângulos da primeira stack
+		//Triângulos da primeira stack (mais em baixo)
 		pontos.push_back(Ponto(0.0f, -raio, 0.0f));
-		pontos.push_back(Ponto(raio * cos(proxAnguloStack) * sin(anguloFatia), raio * sin (proxAnguloStack) , raio * cos(proxAnguloStack) * cos(anguloFatia)));
 		pontos.push_back(Ponto(raio * cos(proxAnguloStack) * sin(proxAnguloFatia), raio * sin(proxAnguloStack), raio * cos(proxAnguloStack) * cos(proxAnguloFatia)));
+		pontos.push_back(Ponto(raio * cos(proxAnguloStack) * sin(anguloFatia), raio * sin (proxAnguloStack) , raio * cos(proxAnguloStack) * cos(anguloFatia)));
 
 		anguloStack += defaultAngleStack;
 		proxAnguloStack += defaultAngleStack;
 
 		for (int nrCamada = 1; nrCamada < nrStacks; nrCamada++) {
 
-			//Trinagulo de stacks intermédias que compõe um quadrado
+			//Triangulo de stacks intermédias que compõe um quadrado
 			pontos.push_back(Ponto(raio * cos(anguloStack) * sin(anguloFatia), raio * sin(anguloStack), raio * cos(anguloStack) * cos(anguloFatia)));
 			pontos.push_back(Ponto(raio * cos(anguloStack) * sin(proxAnguloFatia), raio * sin(anguloStack), raio * cos(anguloStack) * cos(proxAnguloFatia)));
 			pontos.push_back(Ponto(raio * cos(proxAnguloStack) * sin(anguloFatia), raio * sin(proxAnguloStack), raio * cos(proxAnguloStack) * cos(anguloFatia)));
 
-			//Trinagulo de stacks intermédias que compõe um quadrado
+			//Triangulo de stacks intermédias que compõe um quadrado
 			pontos.push_back(Ponto(raio * cos(anguloStack) * sin(proxAnguloFatia), raio * sin(anguloStack), raio * cos(anguloStack) * cos(proxAnguloFatia)));
 			pontos.push_back(Ponto(raio * cos(proxAnguloStack) * sin(proxAnguloFatia), raio * sin(proxAnguloStack), raio * cos(proxAnguloStack) * cos(proxAnguloFatia)));
 			pontos.push_back(Ponto(raio * cos(proxAnguloStack) * sin(anguloFatia), raio * sin(proxAnguloStack), raio * cos(proxAnguloStack) * cos(anguloFatia)));
@@ -226,11 +226,11 @@ vector<Ponto> sphere(float raio, int nrSlices, int nrStacks) {
 			proxAnguloStack += defaultAngleStack;
 		}
 
-		//Triângulos da ultima stack
+		//Triângulos da última stack (mais em cima)
 		pontos.push_back(Ponto(0.0f, raio, 0.0f));
 		pontos.push_back(Ponto(raio * cos(anguloStack) * sin(proxAnguloFatia), raio * sin(anguloStack), raio * cos(anguloStack) * cos(proxAnguloFatia)));
 		pontos.push_back(Ponto(raio * cos(anguloStack) * sin(anguloFatia), raio * sin(anguloStack), raio * cos(anguloStack) * cos(anguloFatia)));
-		
+
 		anguloStack += defaultAngleStack;
 		proxAnguloStack += defaultAngleStack;
 	}

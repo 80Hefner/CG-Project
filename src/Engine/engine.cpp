@@ -15,15 +15,19 @@
 
 using namespace std;
 
-
+// Vector with all objects
 vector<vector<Ponto>> objects;
+// Object to draw (-1 draws all)
+int current_object = -1;
 
+// Presentation options
 GLenum gl_mode = GL_LINE;
 GLenum gl_face = GL_FRONT;
+
+// Camera values
 GLdouble alpha_angle = M_PI / 4;
 GLdouble beta_angle = M_PI / 6;
 GLdouble gamma_value = 10.0;
-int current_object = -1;
 
 
 void changeSize(int w, int h) {
@@ -158,14 +162,20 @@ void load3dFiles(vector<string> _3dFilesList) {
 
 	for (int i = 0; i < _3dFilesList.size(); i++) {
 		file.open(_3dFilesList[i], ios::in);
+		getline(file, line);
+		int nr_points = atoi(line.c_str());
 		vector<Ponto> points;
 
 		if (file.is_open()) {
-			while ( getline (file,line) ) {
+			for (int i = 0; i < nr_points; i++) {
+				getline(file, line);
 				Ponto p = Ponto(line);
 				points.push_back(p);
 			}
 			file.close();
+		}
+		else {
+			cout << "Unable to open file!\n";
 		}
 
 		objects.push_back(points);
@@ -183,33 +193,35 @@ int main(int argc, char **argv) {
 		_3dFilesList.push_back("../../files3D/cone.3d");
 		_3dFilesList.push_back("../../files3D/box.3d");
 		_3dFilesList.push_back("../../files3D/plane.3d");
+		_3dFilesList.push_back("../../files3D/sphere.3d");
 
         // init 3d models
         load3dFiles(_3dFilesList);
 
+		// init GLUT and the window
+		glutInit(&argc, argv);
+		glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
+		glutInitWindowPosition(100,100);
+		glutInitWindowSize(800,800);
+		glutCreateWindow("CG@DI-UM");
+
+		// Required callback registry
+		glutDisplayFunc(renderScene);
+		glutReshapeFunc(changeSize);
+
+		// put here the registration of the keyboard callbacks
+		glutKeyboardFunc(reageEventoChar);
+
+		//  OpenGL settings
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+
+		// enter GLUT's main cycle
+		glutMainLoop();
     }
-
-
-// init GLUT and the window
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
-	glutInitWindowPosition(100,100);
-	glutInitWindowSize(800,800);
-	glutCreateWindow("CG@DI-UM");
-
-// Required callback registry
-	glutDisplayFunc(renderScene);
-	glutReshapeFunc(changeSize);
-
-// put here the registration of the keyboard callbacks
-	glutKeyboardFunc(reageEventoChar);
-
-//  OpenGL settings
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
-// enter GLUT's main cycle
-	glutMainLoop();
+	else {
+		cout << "Invalid input!\n";
+	}
 
 	return 1;
 }
