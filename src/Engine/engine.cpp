@@ -16,12 +16,14 @@
 using namespace std;
 
 
-vector<Ponto> objects;
+vector<vector<Ponto>> objects;
 
 GLenum gl_mode = GL_LINE;
+GLenum gl_face = GL_FRONT;
 GLdouble alpha_angle = M_PI / 4;
 GLdouble beta_angle = M_PI / 6;
 GLdouble gamma_value = 10.0;
+int current_object = -1;
 
 
 void changeSize(int w, int h) {
@@ -66,15 +68,30 @@ void drawAxis(void) {
 	glEnd();
 }
 
-void drawObjects() { //TODO: desenhar todos objetos e rever funçao
+void drawObject(vector<Ponto> points) {
+	for (int j = 0; j < points.size(); j+=3) {
+		glBegin(GL_TRIANGLES);
+		glVertex3f(points[j].getX(),points[j].getY(),points[j].getZ());
+		glVertex3f(points[j+1].getX(),points[j+1].getY(),points[j+1].getZ());
+		glVertex3f(points[j+2].getX(),points[j+2].getY(),points[j+2].getZ());
+		glEnd();
+	}
+}
+
+void drawObjects() {
     glColor3f(1,1,1);
-    for(int i = 0;i<objects.size();i+=3){
-        glBegin(GL_TRIANGLES);
-        glVertex3f(objects[i].getX(),objects[i].getY(),objects[i].getZ());
-        glVertex3f(objects[i+1].getX(),objects[i+1].getY(),objects[i+1].getZ());
-        glVertex3f(objects[i+2].getX(),objects[i+2].getY(),objects[i+2].getZ());
-        glEnd();
-    }
+
+	if (current_object == -1) {
+		for (int i = 0; i < objects.size(); i++) {
+			vector<Ponto> points = objects[i];
+			drawObject(points);
+		}
+	}
+	else {
+		vector<Ponto> points = objects[current_object];
+		drawObject(points);
+	}
+
 }
 
 void renderScene(void) {
@@ -87,7 +104,7 @@ void renderScene(void) {
     gluLookAt(sin(alpha_angle)*cos(beta_angle)*gamma_value, sin(beta_angle)*gamma_value, cos(alpha_angle)*cos(beta_angle)*gamma_value,
 		      0.0,0.0,0.0,
 			  0.0f,1.0f,0.0f);
-	glPolygonMode(GL_FRONT_AND_BACK, gl_mode);
+	glPolygonMode(gl_face, gl_mode);
 
 
     // put drawing instructions here
@@ -118,41 +135,57 @@ void reageEventoChar(unsigned char key, int x, int y) {
 			else if (gl_mode == GL_LINE) gl_mode = GL_POINT;
 			else if (gl_mode == GL_POINT) gl_mode = GL_FILL;
 
-			glPolygonMode(GL_FRONT_AND_BACK,gl_mode);
+			glPolygonMode(gl_face,gl_mode);
 			break;
 		case 27:
 			exit(0);
+			break;
+		default:
+			if (key >= '0' && key <= '9') {
+				int keyN = key - '0';
+				if (keyN <= objects.size()) current_object = keyN - 1;
+			}
 			break;
 	}
 	glutPostRedisplay();
 }
 
 
-void load3dFiles(string pointsFileString) {
+void load3dFiles(vector<string> _3dFilesList) {
     string line;
     string delim = ", ";
     ifstream file;
-    file.open(pointsFileString, ios::in);
 
-    if (file.is_open()) {
-        while ( getline (file,line) ) {
-            Ponto p = Ponto(line);
-            objects.push_back(p);
-        }
+	for (int i = 0; i < _3dFilesList.size(); i++) {
+		file.open(_3dFilesList[i], ios::in);
+		vector<Ponto> points;
 
-        file.close();
-    }
+		if (file.is_open()) {
+			while ( getline (file,line) ) {
+				Ponto p = Ponto(line);
+				points.push_back(p);
+			}
+			file.close();
+		}
+
+		objects.push_back(points);
+	}
+
 }
 
 int main(int argc, char **argv) {
 
     if (argc > 1) {
-        string xmlFileString = argv[1];
-        xmlFileString = "../../filesXML/" + xmlFileString; // TODO: ler do xml
+        //string xmlFileString = argv[1];
+        //xmlFileString = "../../filesXML/" + xmlFileString; // TODO: ler do xml
 
-        string pointsFileString = "../../files3D/cone.3d";
+        vector<string> _3dFilesList;
+		_3dFilesList.push_back("../../files3D/cone.3d");
+		_3dFilesList.push_back("../../files3D/box.3d");
+		_3dFilesList.push_back("../../files3D/plane.3d");
+
         // init 3d models
-        load3dFiles(pointsFileString);
+        load3dFiles(_3dFilesList);
 
     }
 
