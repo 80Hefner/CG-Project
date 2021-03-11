@@ -8,7 +8,6 @@
 using namespace std;
 
 vector<Ponto> plane(float size);
-vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dimY, float dimZ, int divX, int divY, int divZ);
 vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes);
 vector<Ponto> cone(float raioBase, float alturaCone, int nrSlices, int nrStacks);
 vector<Ponto> sphere(float raio, int nrSlices, int nrStacks);
