@@ -24,7 +24,7 @@ int current_object = -1;
 
 // Presentation options
 GLenum gl_mode = GL_LINE;
-GLenum gl_face = GL_FRONT;
+GLenum gl_face = GL_FRONT_AND_BACK;
 
 // Camera values
 GLdouble alpha_angle = M_PI / 4;
@@ -224,9 +224,34 @@ int loadXMLFile(string xmlFileString) {
 	 return (load3dFiles(_3dFilesList));
 }
 
+void engineHelpMenu() {
+	cout << "┌───────────────────────ENGINE HELP───────────────────────┐" << endl;
+	cout << "│   Usage: ./engine [XML FILE]                            │" << endl;
+	cout << "│   Displays all primitives loaded from XML FILE          │" << endl;
+	cout << "│                                                         │" << endl;
+	cout << "│   Camera options                                        │" << endl;
+	cout << "│      a : Moves camera to the left                       │" << endl;
+	cout << "│      d : Moves camera to the right                      │" << endl;
+	cout << "│      w : Moves camera up                                │" << endl;
+	cout << "│      s : Moves camera down                              │" << endl;
+	cout << "│      e : Zoom in                                        │" << endl;
+	cout << "│      q : Zoom out                                       │" << endl;
+	cout << "│                                                         │" << endl;
+	cout << "│   Scene options                                         │" << endl;
+	cout << "│      t   : Cycle between drawing modes                  │" << endl;
+	cout << "│      1-9 : Draw a single object                         │" << endl;
+	cout << "│      0   : Draw all objects                             │" << endl;
+	cout << "│                                                         │" << endl;
+	cout << "│   Press ESC at any time to exit program                 │" << endl;
+	cout << "└─────────────────────────────────────────────────────────┘" << endl;
+}
+
 int main(int argc, char **argv) {
 
-    if (argc > 1) {
+	if (argc == 2 && strcmp(argv[1], "--help") == 0) {
+		engineHelpMenu();
+	}
+    else if (argc == 2) {
 		// load XML file
         string xmlFileString = argv[1];
     	xmlFileString = "../../filesXML/" + xmlFileString;
@@ -240,7 +265,7 @@ int main(int argc, char **argv) {
 		glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 		glutInitWindowPosition(0,0);
 		glutInitWindowSize(glutGet(GLUT_SCREEN_WIDTH),glutGet(GLUT_SCREEN_HEIGHT));
-		glutCreateWindow("FASE 1");
+		glutCreateWindow("CG - FASE 1");
 
 		// Required callback registry
 		glutDisplayFunc(renderScene);

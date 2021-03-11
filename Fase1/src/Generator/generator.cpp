@@ -27,12 +27,35 @@ void writePointsToFile(vector<Ponto> points, string fileString) {
     file.close();
 }
 
+void generatorHelpMenu() {
+	cout << "┌───────────────────────────────────────GENERATOR HELP───────────────────────────────────────┐" << endl;
+	cout << "│   Usage: ./generator [SHAPE]... [OUTPUT FILE]                                              │" << endl;
+	cout << "│   Generates a .3d file, ready to be readen by the engine                                   │" << endl;
+	cout << "│                                                                                            │" << endl;
+	cout << "│   SHAPE                                                                                    │" << endl;
+	cout << "│      plane [SIZE]                                                                          │" << endl;
+	cout << "│          Creates a square in the XZ plane, centred in the origin, with given size.         │" << endl;
+    cout << "│                                                                                            │" << endl;
+    cout << "│      box [X_DIM] [Y_DIM] [Z_DIM] <optional>[DIVISIONS]                                     │" << endl;
+	cout << "│          Creates a box with given dimensions, optionally divided in given divisions.       │" << endl;
+	cout << "│                                                                                            │" << endl;
+    cout << "│      sphere [RADIUS] [SLICES] [STACKS]                                                     │" << endl;
+    cout << "│          Creates a sphere with given radius, divided in given slices and stacks.           │" << endl;
+    cout << "│                                                                                            │" << endl;
+    cout << "│      cone [RADIUS] [HEIGHT] [SLICES] [STACKS]                                              │" << endl;
+    cout << "│          Creates a cone with given radius and height, divided in given slices and stacks.  │" << endl;
+	cout << "└────────────────────────────────────────────────────────────────────────────────────────────┘" << endl;
+}
+
 int main(int argc, char** argv) {
 
     vector<Ponto> pontos;
     string fileString;
 
-    if (argc == 4 && strcmp(argv[1], "plane") == 0) {
+    if (argc == 2 && strcmp(argv[1], "--help") == 0) {
+        generatorHelpMenu();
+    }
+    else if (argc == 4 && strcmp(argv[1], "plane") == 0) {
         float size = atof(argv[2]);
         pontos = plane(size);
 
