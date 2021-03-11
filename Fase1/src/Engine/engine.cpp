@@ -14,6 +14,9 @@
 #include "../utils/ponto.h"
 #include "../utils/tinyxml2.h"
 
+#define WHITE_COLOR_MODE 1
+#define RAND_COLOR_MODE 2
+
 using namespace tinyxml2;
 using namespace std;
 
@@ -25,6 +28,7 @@ int current_object = -1;
 // Presentation options
 GLenum gl_mode = GL_LINE;
 GLenum gl_face = GL_FRONT_AND_BACK;
+int color_mode = WHITE_COLOR_MODE;
 
 // Camera values
 GLdouble alpha_angle = M_PI / 4;
@@ -62,20 +66,23 @@ void drawAxis(void) {
 	// X axis in red
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(3.0f, 0.0f, 0.0f);
+	glVertex3f(1000.0f, 0.0f, 0.0f);
 	// Y Axis in Green
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 3.0f, 0.0f);
+	glVertex3f(0.0f, 1000.0f, 0.0f);
 	// Z Axis in Blue
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 3.0f);
+	glVertex3f(0.0f, 0.0f, 1000.0f);
 	glEnd();
 }
 
 void drawObject(vector<Ponto> points) {
 	for (int j = 0; j < points.size(); j+=3) {
+		if (color_mode == WHITE_COLOR_MODE) glColor3f(1.0, 1.0, 1.0);
+		else glColor3f((float) rand() / (float) (RAND_MAX), (float) rand() / (float) (RAND_MAX), (float) rand() / (float) (RAND_MAX));
+
 		glBegin(GL_TRIANGLES);
 		glVertex3f(points[j].getX(),points[j].getY(),points[j].getZ());
 		glVertex3f(points[j+1].getX(),points[j+1].getY(),points[j+1].getZ());
@@ -85,8 +92,6 @@ void drawObject(vector<Ponto> points) {
 }
 
 void drawObjects() {
-    glColor3f(1,1,1);
-
 	if (current_object == -1) {
 		for (int i = 0; i < objects.size(); i++) {
 			vector<Ponto> points = objects[i];
@@ -142,6 +147,10 @@ void reageEventoChar(unsigned char key, int x, int y) {
 			else if (gl_mode == GL_POINT) gl_mode = GL_FILL;
 
 			glPolygonMode(gl_face,gl_mode);
+			break;
+		case 'c':
+			if (color_mode == WHITE_COLOR_MODE) color_mode = RAND_COLOR_MODE;
+			else color_mode = WHITE_COLOR_MODE;
 			break;
 		case 27:
 			exit(0);
@@ -239,6 +248,7 @@ void engineHelpMenu() {
 	cout << "│                                                         │" << endl;
 	cout << "│   Scene options                                         │" << endl;
 	cout << "│      t   : Cycle between drawing modes                  │" << endl;
+	cout << "│      c   : Cycle between white and random colors        │" << endl;
 	cout << "│      1-9 : Draw a single object                         │" << endl;
 	cout << "│      0   : Draw all objects                             │" << endl;
 	cout << "│                                                         │" << endl;
