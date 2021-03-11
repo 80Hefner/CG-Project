@@ -30,71 +30,6 @@ vector<Ponto> plane(float size) {
 
 }
 
-vector<Ponto> criaCubo(float iniX, float iniY, float iniZ, float dimX, float dimY, float dimZ, int divX, int divY, int divZ) {
-
-	vector<Ponto> pontos;
-
-	//CONTRUINDO POR FACES TEMOS:
-
-	// Plano xz pos
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + divZ * dimZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + divZ * dimZ));
-
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY, -iniZ + divZ * dimZ));
-
-	// Plano xz neg
-	pontos.push_back(Ponto(-iniX + divX * dimX, -iniY, -iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, -iniY, -iniZ + divZ * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, -iniY, -iniZ + divZ * dimZ));
-
-	pontos.push_back(Ponto(-iniX + divX * dimX, -iniY, -iniZ + (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, -iniY, -iniZ + divZ * dimZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, -iniY, -iniZ + (divZ + 1) * dimZ));
-
-	// Plano xy pos
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - divY * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, iniZ));
-
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - (divY + 1) * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, iniZ));
-
-	// Plano xy neg
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - divY * dimY, -iniZ));
-
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - (divY + 1) * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + divX * dimX, iniY - (divY + 1) * dimY, -iniZ));
-	pontos.push_back(Ponto(-iniX + (divX + 1) * dimX, iniY - divY * dimY, -iniZ));
-
-
-	// Plano yz pos
-	pontos.push_back(Ponto(iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
-	pontos.push_back(Ponto(iniX, iniY - (divY + 1) * dimY, iniZ - (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
-
-	pontos.push_back(Ponto(iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
-	pontos.push_back(Ponto(iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(iniX, iniY - divY * dimY, iniZ - divZ * dimZ));
-
-	// Plano yz neg
-	pontos.push_back(Ponto(-iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
-	pontos.push_back(Ponto(-iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
-	pontos.push_back(Ponto(-iniX, iniY - (divY + 1) * dimY, iniZ - (divZ + 1) * dimZ));
-
-	pontos.push_back(Ponto(-iniX, iniY - (divY + 1) * dimY, iniZ - divZ * dimZ));
-	pontos.push_back(Ponto(-iniX, iniY - divY * dimY, iniZ - divZ * dimZ));
-	pontos.push_back(Ponto(-iniX, iniY - divY * dimY, iniZ - (divZ + 1) * dimZ));
-
-
-	return pontos;
-}
-
 // Cria��o de uma box com as dimens�es dadas e com um numero de Divis�es em iguais sec��es da caixa
 vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 
@@ -104,23 +39,79 @@ vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 	float inicialY = dimY / 2;
 	float inicialZ = dimZ / 2;
 
-	float distanicaX = dimX / nrDivisoes;
-	float distanicaY = dimY / nrDivisoes;
-	float distanicaZ = dimZ / nrDivisoes;
+	float distanciaX = dimX / nrDivisoes;
+	float distanciaY = dimY / nrDivisoes;
+	float distanciaZ = dimZ / nrDivisoes;
 
-	// Se tivermos 2 divis�es, pasamos a ter 8 cubos.
-	// Temos de fazer ent�o 3 for (um para a divis�o em cada eixo)
+	for (int divX = 0; divX < nrDivisoes; divX++) {
+		for (int divZ = 0; divZ < nrDivisoes; divZ++) {
+
+			// Plano xz pos
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY, -inicialZ + (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY, -inicialZ + divZ * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY, -inicialZ + divZ * distanciaZ));
+
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY, -inicialZ + (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY, -inicialZ + (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY, -inicialZ + divZ * distanciaZ));
+
+			// Plano xz neg
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, -inicialY, -inicialZ + (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, -inicialY, -inicialZ + divZ * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, -inicialY, -inicialZ + divZ * distanciaZ));
+
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, -inicialY, -inicialZ + (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, -inicialY, -inicialZ + divZ * distanciaZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, -inicialY, -inicialZ + (divZ + 1) * distanciaZ));
+
+		}
+	}
+
 	for (int divX = 0; divX < nrDivisoes; divX++) {
 		for (int divY = 0; divY < nrDivisoes; divY++) {
-			for (int divZ = 0; divZ < nrDivisoes; divZ++) {
 
-				//Cria um vector de Pontos para todos os cubos que v�o fazer parte da Box
-				vector<Ponto> novosPontos = criaCubo(inicialX, inicialY, inicialZ, distanicaX, distanicaY, distanicaZ, divX, divY, divZ);
+			// Plano xy pos
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY - divY * distanciaY, inicialZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY - divY * distanciaY, inicialZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY - (divY + 1) * distanciaY, inicialZ));
 
-				//Junta os pontos de um cubinho aos pontos que j� tinha de cubos anteriores que formavam a caixa
-				pontos.insert(pontos.end(), novosPontos.begin(), novosPontos.end());
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY - (divY + 1) * distanciaY, inicialZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY - divY * distanciaY, inicialZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY - (divY + 1) * distanciaY, inicialZ));
 
-			}
+			// Plano xy neg
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY - divY * distanciaY, -inicialZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY - (divY + 1) * distanciaY, -inicialZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY - divY * distanciaY, -inicialZ));
+
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY - (divY + 1) * distanciaY, -inicialZ));
+			pontos.push_back(Ponto(-inicialX + divX * distanciaX, inicialY - (divY + 1) * distanciaY, -inicialZ));
+			pontos.push_back(Ponto(-inicialX + (divX + 1) * distanciaX, inicialY - divY * distanciaY, -inicialZ));
+
+		}
+	}
+
+	for (int divY = 0; divY < nrDivisoes; divY++) {
+		for (int divZ = 0; divZ < nrDivisoes; divZ++) {
+
+			// Plano yz pos
+			pontos.push_back(Ponto(inicialX, inicialY - (divY + 1) * distanciaY, inicialZ - divZ * distanciaZ));
+			pontos.push_back(Ponto(inicialX, inicialY - (divY + 1) * distanciaY, inicialZ - (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(inicialX, inicialY - divY * distanciaY, inicialZ - (divZ + 1) * distanciaZ));
+
+			pontos.push_back(Ponto(inicialX, inicialY - (divY + 1) * distanciaY, inicialZ - divZ * distanciaZ));
+			pontos.push_back(Ponto(inicialX, inicialY - divY * distanciaY, inicialZ - (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(inicialX, inicialY - divY * distanciaY, inicialZ - divZ * distanciaZ));
+
+			// Plano yz neg
+			pontos.push_back(Ponto(-inicialX, inicialY - (divY + 1) * distanciaY, inicialZ - divZ * distanciaZ));
+			pontos.push_back(Ponto(-inicialX, inicialY - divY * distanciaY, inicialZ - (divZ + 1) * distanciaZ));
+			pontos.push_back(Ponto(-inicialX, inicialY - (divY + 1) * distanciaY, inicialZ - (divZ + 1) * distanciaZ));
+
+			pontos.push_back(Ponto(-inicialX, inicialY - (divY + 1) * distanciaY, inicialZ - divZ * distanciaZ));
+			pontos.push_back(Ponto(-inicialX, inicialY - divY * distanciaY, inicialZ - divZ * distanciaZ));
+			pontos.push_back(Ponto(-inicialX, inicialY - divY * distanciaY, inicialZ - (divZ + 1) * distanciaZ));
+
 		}
 	}
 
