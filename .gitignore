@@ -4,3 +4,8 @@
 /Fase1/src/cmake-build-debug
 /Fase1/src/Engine/cmake-build-debug
 /Fase1/src/Generator/cmake-build-debug
+/Fase2/src/build
+/Fase2/src/cmake-build-debug
+/Fase2/src/Engine/cmake-build-debug
+/Fase2/src/Generator/cmake-build-debug
+/.vscode
