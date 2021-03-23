@@ -15,33 +15,30 @@
 #include "../utils/tinyxml2.h"
 #include "utils/group.h"
 
-#define WHITE_COLOR_MODE 1
-#define RAND_COLOR_MODE 2
-
 #define _3DFILESFOLDER "../../files3D/"
 #define XMLFILESFOLDER "../../filesXML/"
 
 using namespace tinyxml2;
 using namespace std;
 // TODO: criar xml sistema solar
-// TODO: apresentar objectos
+// TODO: poder andar com a camara a vontade
 
 // * Global variables * //
 
 // Vector with all objects
 vector<Group> groups_vector;
-// Object to draw (-1 draws all)
-int current_object = -1;
-vector<vector<Ponto>> objects; // tem de ir de piça
+
 // Presentation options
 GLenum gl_mode = GL_LINE;
 GLenum gl_face = GL_FRONT_AND_BACK;
-int color_mode = WHITE_COLOR_MODE;
 
 // Camera values
 GLdouble alpha_angle = M_PI / 4;
+GLdouble alpha_angle_inc = M_PI / 64;
 GLdouble beta_angle = M_PI / 6;
-GLdouble gamma_value = 10.0;
+GLdouble beta_angle_inc = M_PI / 64;
+GLdouble gamma_value = 100.0;
+GLdouble gamma_value_inc = 1;
 
 
 // * Functions declarations * //
@@ -51,14 +48,14 @@ void renderScene(void);
 void engineHelpMenu();
 void drawAxis(void);
 void drawObject(vector<Ponto> points);
-void drawObjects();
+void drawGroup(Group g);
 void reactRegularKeys(unsigned char key, int x, int y);
-int load3dFiles(vector<string> _3dFilesList);
+vector<Ponto> load3dFile(string _3dFile);
 int loadXMLFile(string xmlFileString);
 Group parseXMLGroupElement (XMLElement* main_element);
 
 
-// * Functions * //
+// * Glut Functions * //
 
 // Reshape function
 void changeSize(int w, int h) {
@@ -101,36 +98,49 @@ void renderScene(void) {
 
 
     // put drawing instructions here
+	// Draw axis
 	drawAxis();
-    drawObjects();
+
+	// Draw groups
+    for (Group g : groups_vector) {
+		drawGroup(g);
+	}
 
 	// End of frame
 	glutSwapBuffers();
 }
 
-// Function to print help menu
-void engineHelpMenu() {
-	cout << "┌───────────────────────ENGINE HELP───────────────────────┐" << endl;
-	cout << "│   Usage: ./engine [XML FILE]                            │" << endl;
-	cout << "│   Displays all primitives loaded from XML FILE          │" << endl;
-	cout << "│                                                         │" << endl;
-	cout << "│   Camera options                                        │" << endl;
-	cout << "│      a : Moves camera to the left                       │" << endl;
-	cout << "│      d : Moves camera to the right                      │" << endl;
-	cout << "│      w : Moves camera up                                │" << endl;
-	cout << "│      s : Moves camera down                              │" << endl;
-	cout << "│      e : Zoom in                                        │" << endl;
-	cout << "│      q : Zoom out                                       │" << endl;
-	cout << "│                                                         │" << endl;
-	cout << "│   Scene options                                         │" << endl;
-	cout << "│      t   : Cycle between drawing modes                  │" << endl;
-	cout << "│      c   : Cycle between white and random colors        │" << endl;
-	cout << "│      1-9 : Draw a single object                         │" << endl;
-	cout << "│      0   : Draw all objects                             │" << endl;
-	cout << "│                                                         │" << endl;
-	cout << "│   Press ESC at any time to exit program                 │" << endl;
-	cout << "└─────────────────────────────────────────────────────────┘" << endl;
+// Function to react to events from regular keys
+void reactRegularKeys(unsigned char key, int x, int y) {
+	switch (key) {
+        case 'a': alpha_angle -= alpha_angle_inc; break;
+		case 'd': alpha_angle += alpha_angle_inc; break;
+		case 'w':
+			beta_angle += beta_angle_inc;
+			if (beta_angle > 1.5) beta_angle = 1.5;
+			break;
+		case 's':
+			beta_angle -= beta_angle_inc;
+			if (beta_angle < -1.5) beta_angle = -1.5;
+			break;
+		case 'e': gamma_value -= gamma_value_inc; break;
+		case 'q': gamma_value += gamma_value_inc; break;
+		case 't':
+			if (gl_mode == GL_FILL) gl_mode = GL_LINE;
+			else if (gl_mode == GL_LINE) gl_mode = GL_POINT;
+			else if (gl_mode == GL_POINT) gl_mode = GL_FILL;
+
+			glPolygonMode(gl_face,gl_mode);
+			break;
+		case 27:
+			exit(0);
+			break;
+	}
+	glutPostRedisplay();
 }
+
+
+// * Draw Functions * //
 
 // Function to draw xyz axis
 void drawAxis(void) {
@@ -153,9 +163,6 @@ void drawAxis(void) {
 // Function to draw a single object, given its points
 void drawObject(vector<Ponto> points) {
 	for (int j = 0; j < points.size(); j+=3) {
-		if (color_mode == WHITE_COLOR_MODE) glColor3f(1.0, 1.0, 1.0);
-		else glColor3f((float) rand() / (float) (RAND_MAX), (float) rand() / (float) (RAND_MAX), (float) rand() / (float) (RAND_MAX));
-
 		glBegin(GL_TRIANGLES);
 		glVertex3f(points[j].getX(),points[j].getY(),points[j].getZ());
 		glVertex3f(points[j+1].getX(),points[j+1].getY(),points[j+1].getZ());
@@ -164,89 +171,82 @@ void drawObject(vector<Ponto> points) {
 	}
 }
 
-// Function to draw all objects
-void drawObjects() {
-	if (current_object == -1) {
-		for (int i = 0; i < objects.size(); i++) {
-			vector<Ponto> points = objects[i];
-			drawObject(points);
-		}
-	}
-	else {
-		vector<Ponto> points = objects[current_object];
-		drawObject(points);
+// Function to draw a single group
+void drawGroup(Group g) {
+	
+	// Set the model view matrix as current, just for safety
+	glMatrixMode(GL_MODELVIEW);
+
+	// Push matrix on beggining
+	glPushMatrix();
+
+	// Trying to get translations from group
+	vector<Translate> ts = g.getTranslates();
+	for (Translate t : ts) {
+		glTranslatef(t.getX(), t.getY(), t.getZ());
 	}
 
+	// Trying to get rotations from group
+	vector<Rotate> rs = g.getRotates();
+	for (Rotate r : rs) {
+		glRotatef(r.getAngle(), r.getAxisX(), r.getAxisY(), r.getAxisZ());
+	}
+
+	// Trying to get scales from group
+	vector<Scale> scs = g.getScales();
+	for (Scale sc : scs) {
+		glScalef(sc.getX(), sc.getY(), sc.getZ());
+	}
+
+	// Trying to get scales from group
+	Color cl = g.getColor();
+	glColor3f(cl.getR(), cl.getG(), cl.getB());
+
+	// Drawing objects in this group
+	vector<vector<Ponto>> objects = g.getObjects();
+	for (vector<Ponto> object : objects) {
+		drawObject(object);
+	}
+
+	// Drawing groups in this group
+	vector<Group> groups = g.getGroups();
+	for (Group group : groups) {
+		drawGroup(group);
+	}
+
+	// Popping matrix after drawing all objects in this group
+	glPopMatrix();
 }
 
-// Function to react evencts from regular keys
-void reactRegularKeys(unsigned char key, int x, int y) {
-	switch (key) {
-        case 'a': alpha_angle -= M_PI / 32; break;
-		case 'd': alpha_angle += M_PI / 32; break;
-		case 'w':
-			beta_angle += M_PI / 32;
-			if (beta_angle > 1.5) beta_angle = 1.5;
-			break;
-		case 's':
-			beta_angle -= M_PI / 32;
-			if (beta_angle < -1.5) beta_angle = -1.5;
-			break;
-		case 'e': gamma_value -= 0.5; break;
-		case 'q': gamma_value += 0.5; break;
-		case 't':
-			if (gl_mode == GL_FILL) gl_mode = GL_LINE;
-			else if (gl_mode == GL_LINE) gl_mode = GL_POINT;
-			else if (gl_mode == GL_POINT) gl_mode = GL_FILL;
 
-			glPolygonMode(gl_face,gl_mode);
-			break;
-		case 'c':
-			if (color_mode == WHITE_COLOR_MODE) color_mode = RAND_COLOR_MODE;
-			else color_mode = WHITE_COLOR_MODE;
-			break;
-		case 27:
-			exit(0);
-			break;
-		default:
-			if (key >= '0' && key <= '9') {
-				int keyN = key - '0';
-				if (keyN <= objects.size()) current_object = keyN - 1;
-			}
-			break;
-	}
-	glutPostRedisplay();
-}
 
-// Function to load a list of .3d files
-int load3dFiles(vector<string> _3dFilesList) {
+// * Parsing Functions * //
+
+// Function to load a .3d file into a vector of points
+vector<Ponto> load3dFile(string _3dFile) {
     string line;
     string delim = ", ";
     ifstream file;
+	vector<Ponto> points = {};
 
-	for (int i = 0; i < _3dFilesList.size(); i++) {
-		file.open(_3dFilesList[i].c_str(), ios::in);
-		getline(file, line);
-		int nr_points = atoi(line.c_str());
-		vector<Ponto> points;
+	file.open(_3dFile.c_str(), ios::in);
+	getline(file, line);
+	int nr_points = atoi(line.c_str());
+		
 
-		if (file.is_open()) {
-			for (int j = 0; j < nr_points; j++) {
-				getline(file, line);
-				Ponto p = Ponto(line);
-				points.push_back(p);
-			}
-			file.close();
+	if (file.is_open()) {
+		for (int j = 0; j < nr_points; j++) {
+			getline(file, line);
+			Ponto p = Ponto(line);
+			points.push_back(p);
 		}
-		else {
-			cout << "Unable to open file!\n";
-			return 0;
-		}
-
-		objects.push_back(points);
+		file.close();
+	}
+	else {
+		cout << "Unable to open file: " << _3dFile.c_str() << "\n";
 	}
 
-	return 1;
+	return points;
 }
 
 // Function to parse a xml file
@@ -285,52 +285,101 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 	// Trying to get translate element
 	XMLElement* translate_element = main_element->FirstChildElement("translate");
-	if (translate_element) {
+	while (translate_element) {
 		// Get x attribute
 		const XMLAttribute* x_attribute = translate_element->FindAttribute("X");
-		float x_value;
-		x_attribute ? x_value = atof(x_attribute->Value()) : x_value = 0;
+		float x_trans;
+		x_attribute ? x_trans = atof(x_attribute->Value()) : x_trans = 0;
 
 		// Get y attribute
 		const XMLAttribute* y_attribute = translate_element->FindAttribute("Y");
-		float y_value;
-		y_attribute ? y_value = atof(y_attribute->Value()) : y_value = 0;
+		float y_trans;
+		y_attribute ? y_trans = atof(y_attribute->Value()) : y_trans = 0;
 
 		// Get z attribute
 		const XMLAttribute* z_attribute = translate_element->FindAttribute("Z");
-		float z_value;
-		z_attribute ? z_value = atof(z_attribute->Value()) : z_value = 0;
+		float z_trans;
+		z_attribute ? z_trans = atof(z_attribute->Value()) : z_trans = 0;
 
-		new_group.setTranslate(x_value, y_value, z_value);
+		new_group.addTranslate(x_trans, y_trans, z_trans);
+
+		translate_element = translate_element->NextSiblingElement("translate");
 	}
 
 	// Trying to get rotate element
 	XMLElement* rotate_element = main_element->FirstChildElement("rotate");
-	if (rotate_element) {
+	while (rotate_element) {
 		// Get angle attribute
 		const XMLAttribute* angle_attribute = rotate_element->FindAttribute("angle");
-		float angle_value;
-		angle_attribute ? angle_value = atof(angle_attribute->Value()) : angle_value = 0;
+		float angle_rot;
+		angle_attribute ? angle_rot = atof(angle_attribute->Value()) : angle_rot = 0;
 
 		// Get axisX attribute
 		const XMLAttribute* axisX_attribute = rotate_element->FindAttribute("axisX");
-		float axisX_value;
-		axisX_attribute ? axisX_value = atof(axisX_attribute->Value()) : axisX_value = 0;
+		float axisX_rot;
+		axisX_attribute ? axisX_rot = atof(axisX_attribute->Value()) : axisX_rot = 0;
 
 		// Get axisY attribute
 		const XMLAttribute* axisY_attribute = rotate_element->FindAttribute("axisY");
-		float axisY_value;
-		axisY_attribute ? axisY_value = atof(axisY_attribute->Value()) : axisY_value = 0;
+		float axisY_rot;
+		axisY_attribute ? axisY_rot = atof(axisY_attribute->Value()) : axisY_rot = 0;
 
 		// Get axisZ attribute
 		const XMLAttribute* axisZ_attribute = rotate_element->FindAttribute("axisZ");
-		float axisZ_value;
-		axisZ_attribute ? axisZ_value = atof(axisZ_attribute->Value()) : axisZ_value = 0;
+		float axisZ_rot;
+		axisZ_attribute ? axisZ_rot = atof(axisZ_attribute->Value()) : axisZ_rot = 0;
 
-		new_group.setRotate(angle_value, axisX_value, axisY_value, axisZ_value);
+		new_group.addRotate(angle_rot, axisX_rot, axisY_rot, axisZ_rot);
+
+		rotate_element = rotate_element->NextSiblingElement("rotate");
 	}
 
-	// TODO: scale e colour
+	// Trying to get scale element
+	XMLElement* scale_element = main_element->FirstChildElement("scale");
+	while (scale_element) {
+		// Get x attribute
+		const XMLAttribute* x_attribute = scale_element->FindAttribute("X");
+		float x_scale;
+		x_attribute ? x_scale = atof(x_attribute->Value()) : x_scale = 0;
+
+		// Get y attribute
+		const XMLAttribute* y_attribute = scale_element->FindAttribute("Y");
+		float y_scale;
+		y_attribute ? y_scale = atof(y_attribute->Value()) : y_scale = 0;
+
+		// Get z attribute
+		const XMLAttribute* z_attribute = scale_element->FindAttribute("Z");
+		float z_scale;
+		z_attribute ? z_scale = atof(z_attribute->Value()) : z_scale = 0;
+
+		new_group.addScale(x_scale, y_scale, z_scale);
+
+		scale_element = scale_element->NextSiblingElement("scale");
+	}
+
+	// Trying to get color element. If not found, sets color to white
+	XMLElement* color_element = main_element->FirstChildElement("color");
+	if (color_element) {
+		// Get r attribute
+		const XMLAttribute* r_attribute = color_element->FindAttribute("R");
+		float r_color;
+		r_attribute ? r_color = atof(r_attribute->Value()) : r_color = 0;
+
+		// Get g attribute
+		const XMLAttribute* g_attribute = color_element->FindAttribute("G");
+		float g_color;
+		g_attribute ? g_color = atof(g_attribute->Value()) : g_color = 0;
+
+		// Get b attribute
+		const XMLAttribute* b_attribute = color_element->FindAttribute("B");
+		float b_color;
+		b_attribute ? b_color = atof(b_attribute->Value()) : b_color = 0;
+
+		new_group.setColor(r_color, g_color, b_color);
+	}
+	else {
+		new_group.setColor(1.0f,1.0f,1.0f);
+	}
 
 	// Trying to get models element
 	XMLElement* models_element = main_element->FirstChildElement("models");
@@ -342,9 +391,10 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 			const XMLAttribute* file_attribute = model_element->FindAttribute("file");
 			if (file_attribute) {
 				string file = file_attribute->Value();
-				new_group.add3dFile(file);
+				vector<Ponto> file_object = load3dFile(_3DFILESFOLDER + file);
+				new_group.addObject(file_object);
 			}
-			model_element = model_element->NextSiblingElement();
+			model_element = model_element->NextSiblingElement("models");
 		}
 	}
 
@@ -353,11 +403,34 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 	while (group_element) {
 		new_group.addGroup(parseXMLGroupElement(group_element));
 
-		group_element = group_element->NextSiblingElement();
+		group_element = group_element->NextSiblingElement("group");
 	}
 
-
 	return new_group;
+}
+
+// Function to print help menu
+void engineHelpMenu() {
+	cout << "┌───────────────────────ENGINE HELP───────────────────────┐" << endl;
+	cout << "│   Usage: ./engine [XML FILE]                            │" << endl;
+	cout << "│   Displays all primitives loaded from XML FILE          │" << endl;
+	cout << "│                                                         │" << endl;
+	cout << "│   Camera options                                        │" << endl;
+	cout << "│      a : Moves camera to the left                       │" << endl;
+	cout << "│      d : Moves camera to the right                      │" << endl;
+	cout << "│      w : Moves camera up                                │" << endl;
+	cout << "│      s : Moves camera down                              │" << endl;
+	cout << "│      e : Zoom in                                        │" << endl;
+	cout << "│      q : Zoom out                                       │" << endl;
+	cout << "│                                                         │" << endl;
+	cout << "│   Scene options                                         │" << endl;
+	cout << "│      t   : Cycle between drawing modes                  │" << endl;
+	cout << "│      c   : Cycle between white and random colors        │" << endl;
+	cout << "│      1-9 : Draw a single object                         │" << endl;
+	cout << "│      0   : Draw all objects                             │" << endl;
+	cout << "│                                                         │" << endl;
+	cout << "│   Press ESC at any time to exit program                 │" << endl;
+	cout << "└─────────────────────────────────────────────────────────┘" << endl;
 }
 
 
