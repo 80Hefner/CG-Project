@@ -14,6 +14,7 @@
 #include "../utils/ponto.h"
 #include "../utils/tinyxml2.h"
 #include "utils/group.h"
+#include "utils/camera.h"
 
 #define _3DFILESFOLDER "../../files3D/"
 #define XMLFILESFOLDER "../../filesXML/"
@@ -33,26 +34,22 @@ GLenum gl_mode = GL_LINE;
 GLenum gl_face = GL_FRONT_AND_BACK;
 
 // Camera values
-GLdouble alpha_angle = M_PI / 4;
-GLdouble alpha_angle_inc = M_PI / 64;
-GLdouble beta_angle = M_PI / 6;
-GLdouble beta_angle_inc = M_PI / 64;
-GLdouble gamma_value = 100.0;
-GLdouble gamma_value_inc = 1;
-
+Camera* camera;
+int mouseX;
 
 // * Functions declarations * //
 
 void changeSize(int w, int h);
 void renderScene(void);
-void engineHelpMenu();
+void reactRegularKeys(unsigned char key, int x, int y);
+void reactMouseMovement(int xx, int yy);
 void drawAxis(void);
 void drawObject(vector<Ponto> points);
 void drawGroup(Group g);
-void reactRegularKeys(unsigned char key, int x, int y);
 vector<Ponto> load3dFile(string _3dFile);
 int loadXMLFile(string xmlFileString);
 Group parseXMLGroupElement (XMLElement* main_element);
+void engineHelpMenu();
 
 
 // * Glut Functions * //
@@ -91,11 +88,10 @@ void renderScene(void) {
 
 	// set the camera
 	glLoadIdentity();
-    gluLookAt(sin(alpha_angle)*cos(beta_angle)*gamma_value, sin(beta_angle)*gamma_value, cos(alpha_angle)*cos(beta_angle)*gamma_value,
-		      0.0,0.0,0.0,
+    gluLookAt(camera->getEyeX(), camera->getEyeY(), camera->getEyeZ(),
+		      camera->getCenterX(), camera->getCenterY(), camera->getCenterZ(),
 			  0.0f,1.0f,0.0f);
 	glPolygonMode(gl_face, gl_mode);
-
 
     // put drawing instructions here
 	// Draw axis
@@ -111,20 +107,14 @@ void renderScene(void) {
 }
 
 // Function to react to events from regular keys
-void reactRegularKeys(unsigned char key, int x, int y) {
+void reactRegularKeys(unsigned char key, int xx, int yy) {
 	switch (key) {
-        case 'a': alpha_angle -= alpha_angle_inc; break;
-		case 'd': alpha_angle += alpha_angle_inc; break;
-		case 'w':
-			beta_angle += beta_angle_inc;
-			if (beta_angle > 1.5) beta_angle = 1.5;
-			break;
-		case 's':
-			beta_angle -= beta_angle_inc;
-			if (beta_angle < -1.5) beta_angle = -1.5;
-			break;
-		case 'e': gamma_value -= gamma_value_inc; break;
-		case 'q': gamma_value += gamma_value_inc; break;
+        case 'a': camera->reactRegularKey(key); break;
+		case 'd': camera->reactRegularKey(key); break;
+		case 'w': camera->reactRegularKey(key); break;
+		case 's': camera->reactRegularKey(key); break;
+		case 'e': camera->reactRegularKey(key); break;
+		case 'q': camera->reactRegularKey(key); break;
 		case 't':
 			if (gl_mode == GL_FILL) gl_mode = GL_LINE;
 			else if (gl_mode == GL_LINE) gl_mode = GL_POINT;
@@ -136,9 +126,17 @@ void reactRegularKeys(unsigned char key, int x, int y) {
 			exit(0);
 			break;
 	}
+
 	glutPostRedisplay();
 }
 
+// Function to react to events from the mouse
+void reactMouseMovement(int xx, int yy) {
+	camera->reactMouseMovement(xx-mouseX, 0);
+	mouseX = xx;
+
+	glutPostRedisplay();
+}
 
 // * Draw Functions * //
 
@@ -409,27 +407,25 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 	return new_group;
 }
 
+
+// * Print Functions * //
+
 // Function to print help menu
 void engineHelpMenu() {
 	cout << "┌───────────────────────ENGINE HELP───────────────────────┐" << endl;
-	cout << "│   Usage: ./engine [XML FILE]                            │" << endl;
-	cout << "│   Displays all primitives loaded from XML FILE          │" << endl;
+	cout << "│    Usage: ./engine [XML FILE]                           │" << endl;
+	cout << "│    Displays all primitives loaded from XML FILE         │" << endl;
 	cout << "│                                                         │" << endl;
-	cout << "│   Camera options                                        │" << endl;
-	cout << "│      a : Moves camera to the left                       │" << endl;
-	cout << "│      d : Moves camera to the right                      │" << endl;
-	cout << "│      w : Moves camera up                                │" << endl;
-	cout << "│      s : Moves camera down                              │" << endl;
-	cout << "│      e : Zoom in                                        │" << endl;
-	cout << "│      q : Zoom out                                       │" << endl;
+	cout << "│    Camera options                                       │" << endl;
+	cout << "│        Use w,a,s,d to navigate in space                 │" << endl;
+	cout << "│        Use mouse to turn camera left and right          │" << endl;
+	cout << "│        q : Moves camera position down                   │" << endl;
+	cout << "│        e : Moves camera position up                     │" << endl;
 	cout << "│                                                         │" << endl;
-	cout << "│   Scene options                                         │" << endl;
-	cout << "│      t   : Cycle between drawing modes                  │" << endl;
-	cout << "│      c   : Cycle between white and random colors        │" << endl;
-	cout << "│      1-9 : Draw a single object                         │" << endl;
-	cout << "│      0   : Draw all objects                             │" << endl;
+	cout << "│    Scene options                                        │" << endl;
+	cout << "│        t : Cycle between drawing modes                  │" << endl;
 	cout << "│                                                         │" << endl;
-	cout << "│   Press ESC at any time to exit program                 │" << endl;
+	cout << "│    Press ESC at any time to exit program                │" << endl;
 	cout << "└─────────────────────────────────────────────────────────┘" << endl;
 }
 
@@ -463,10 +459,16 @@ int main(int argc, char **argv) {
 
 		// put here the registration of the keyboard callbacks
 		glutKeyboardFunc(reactRegularKeys);
+		glutPassiveMotionFunc(reactMouseMovement);
 
 		//  OpenGL settings
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
+
+		// init camera
+		camera = new Camera(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+		glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2);
+		mouseX = glutGet(GLUT_WINDOW_WIDTH)/2;
 
 		// enter GLUT's main cycle
 		glutMainLoop();

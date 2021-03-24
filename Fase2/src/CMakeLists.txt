@@ -6,7 +6,11 @@ add_executable(${PROJECT_NAME} Generator/generator.cpp utils/ponto.cpp Generator
 
 # Project Name - Engine
 PROJECT(engine)
-add_executable(${PROJECT_NAME} Engine/engine.cpp Engine/utils/group.cpp utils/ponto.cpp utils/tinyxml2.cpp)
+add_executable(${PROJECT_NAME} Engine/engine.cpp
+								Engine/utils/group.cpp
+								Engine/utils/camera.cpp
+								utils/ponto.cpp
+								utils/tinyxml2.cpp)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
