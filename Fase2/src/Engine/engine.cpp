@@ -13,7 +13,7 @@
 
 #include "../utils/ponto.h"
 #include "../utils/tinyxml2.h"
-#include "utils/group.h"
+#include "utils/group.hpp"
 #include "utils/fpsCamera.h"
 #include "utils/staticCamera.h"
 
@@ -216,22 +216,26 @@ void drawGroup(Group g) {
 	// Push matrix on beggining
 	glPushMatrix();
 
-	// Trying to get translations from group
-	vector<Translate> ts = g.getTranslates();
-	for (Translate t : ts) {
-		glTranslatef(t.getX(), t.getY(), t.getZ());
-	}
+	// Trying to get transformations from group
+	vector<Transformation*> ts = g.getTransformations();
+	for (Transformation* t : ts) {
+		Translate* t_t = dynamic_cast<Translate*>(t);
+		if (t_t) {
+			glTranslatef(t_t->getX(), t_t->getY(), t_t->getZ());
+			continue;
+		}
 
-	// Trying to get rotations from group
-	vector<Rotate> rs = g.getRotates();
-	for (Rotate r : rs) {
-		glRotatef(r.getAngle(), r.getAxisX(), r.getAxisY(), r.getAxisZ());
-	}
+		Rotate* t_r = dynamic_cast<Rotate*>(t);
+		if (t_r) {
+			glRotatef(t_r->getAngle(), t_r->getAxisX(), t_r->getAxisY(), t_r->getAxisZ());
+			continue;
+		}
 
-	// Trying to get scales from group
-	vector<Scale> scs = g.getScales();
-	for (Scale sc : scs) {
-		glScalef(sc.getX(), sc.getY(), sc.getZ());
+		Scale* t_s = dynamic_cast<Scale*>(t);
+		if (t_s) {
+			glScalef(t_s->getX(), t_s->getY(), t_s->getZ());
+			continue;
+		}
 	}
 
 	// Trying to get scales from group

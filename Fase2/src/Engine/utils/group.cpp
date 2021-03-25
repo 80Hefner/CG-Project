@@ -2,137 +2,36 @@
 #include <sstream>
 #include <vector>
 
-#include "group.h"
+#include "group.hpp"
 
 using namespace std;
-
-// * Translate * //
-
-Translate::Translate(float x, float y, float z) {
-    this->x = x;
-    this->y = y;
-    this->z = z;
-}
-
-float Translate::getX() {
-    return this->x;
-}
-
-float Translate::getY() {
-    return this->y;
-}
-
-float Translate::getZ() {
-    return this->z;
-}
-
-// * Rotate * //
-
-Rotate::Rotate(float angle, float axisX, float axisY, float axisZ) {
-    this->angle = angle;
-    this->axisX = axisX;
-    this->axisY = axisY;
-    this->axisZ = axisZ;
-}
-
-float Rotate::getAngle() {
-    return this->angle;
-}
-
-float Rotate::getAxisX() {
-    return this->axisX;
-}
-
-float Rotate::getAxisY() {
-    return this->axisY;
-}
-
-float Rotate::getAxisZ() {
-    return this->axisZ;
-}
-
-// * Scale * //
-
-Scale::Scale(float x, float y, float z) {
-    this->x = x;
-    this->y = y;
-    this->z = z;
-}
-
-float Scale::getX() {
-    return this->x;
-}
-
-float Scale::getY() {
-    return this->y;
-}
-
-float Scale::getZ() {
-    return this->z;
-}
-
-// * Color * //
-
-Color::Color() {
-    this->r = 1.0f;
-    this->g = 1.0f;
-    this->b = 1.0f;
-}
-
-Color::Color(float r, float g, float b) {
-    this->r = r;
-    this->g = g;
-    this->b = b;
-}
-
-float Color::getR() {
-    return this->r;
-}
-
-float Color::getG() {
-    return this->g;
-}
-
-float Color::getB() {
-    return this->b;
-}
 
 // * Group * //
 
 Group::Group() {
-    translates = {};
-    rotates = {};
-    scales = {};
+    transformations = {};
     color = Color();
     objects = {};
     groups = {};
 }
 
 void Group::addTranslate(float x, float y, float z) {
-    Translate tr = Translate(x,y,z);
-    this->translates.push_back(tr);
-}
-
-vector<Translate> Group::getTranslates() {
-    return this->translates;
+    Translate* tr = new Translate(x,y,z);
+    this->transformations.push_back(tr);
 }
 
 void Group::addRotate(float angle, float axisX, float axisY, float axisZ) {
-    Rotate rt = Rotate(angle,axisX,axisY,axisZ);
-    this->rotates.push_back(rt);
-}
-
-vector<Rotate> Group::getRotates() {
-    return this->rotates;
+    Rotate* rt = new Rotate(angle,axisX,axisY,axisZ);
+    this->transformations.push_back(rt);
 }
 
 void Group::addScale(float x, float y, float z) {
-    Scale sc = Scale(x,y,z);
-    this->scales.push_back(sc);
+    Scale* sc = new Scale(x,y,z);
+    this->transformations.push_back(sc);
 }
 
-vector<Scale> Group::getScales() {
-    return this->scales;
+vector<Transformation*> Group::getTransformations() {
+    return this->transformations;
 }
 
 void Group::setColor(float r, float g, float b) {
