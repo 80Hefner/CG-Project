@@ -14,6 +14,7 @@ using namespace std;
 class fpsCamera {
     private:
         GLdouble alpha;
+        GLdouble beta;
         float sensitivity;
 
         GLdouble eyeX;
@@ -21,12 +22,13 @@ class fpsCamera {
         GLdouble eyeZ;
         float speed;
 
-        int startX, tracking;
+        int startX, startY;
+        int tracking[2];
     public:
         fpsCamera(int width, int height);
-        GLdouble getEyeX();
-        GLdouble getEyeY();
-        GLdouble getEyeZ();
+        GLdouble getEyeX() {return eyeX;};
+        GLdouble getEyeY() {return eyeY;};
+        GLdouble getEyeZ() {return eyeZ;};
         GLdouble getCenterX();
         GLdouble getCenterY();
         GLdouble getCenterZ();
