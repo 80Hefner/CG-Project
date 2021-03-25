@@ -13,12 +13,14 @@
 
 #include "../utils/ponto.h"
 #include "../utils/tinyxml2.h"
-#include "utils/group.hpp"
+#include "utils/group.h"
 #include "utils/fpsCamera.h"
 #include "utils/staticCamera.h"
 
 #define _3DFILESFOLDER "../../files3D/"
 #define XMLFILESFOLDER "../../filesXML/"
+#define FPS_CAMERA_CFG_FILE "../../cfg/fpsCamera.cfg"
+#define STATIC_CAMERA_CFG_FILE "../../cfg/staticCamera.cfg"
 
 using namespace tinyxml2;
 using namespace std;
@@ -38,6 +40,7 @@ GLenum gl_face = GL_FRONT_AND_BACK;
 fpsCamera* fps_camera;
 staticCamera* static_camera;
 int camera_mode = 0; // 0 -> static   1 -> fps
+int draw_axis = 0;
 
 // * Functions declarations * //
 
@@ -105,7 +108,7 @@ void renderScene(void) {
 
     // put drawing instructions here
 	// Draw axis
-	drawAxis();
+	if (draw_axis) drawAxis();
 
 	// Draw groups
     for (Group g : groups_vector) {
@@ -148,8 +151,17 @@ void reactRegularKeys(unsigned char key, int xx, int yy) {
 
 			glPolygonMode(gl_face,gl_mode);
 			break;
-		case 'y':
-			camera_mode = ++camera_mode % 2;
+		case '1':
+			camera_mode = 0;
+			break;
+		case '2':
+			camera_mode = 1;
+			break;
+		case 'l':
+			camera_mode ? fps_camera->loadCamera(FPS_CAMERA_CFG_FILE) : static_camera->loadCamera(STATIC_CAMERA_CFG_FILE);
+			break;
+		case 'p':
+			camera_mode ? fps_camera->saveCamera(FPS_CAMERA_CFG_FILE) : static_camera->saveCamera(STATIC_CAMERA_CFG_FILE);
 			break;
 		case 27:
 			exit(0);
@@ -455,29 +467,33 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 // Function to print help menu
 void engineHelpMenu() {
-	cout << "┌────────────────────────ENGINE HELP────────────────────────┐" << endl;
-	cout << "│    Usage: ./engine [XML FILE]                             │" << endl;
-	cout << "│    Displays all primitives loaded from XML FILE           │" << endl;
-	cout << "│                                                           │" << endl;
-	cout << "│    FPS camera options                                     │" << endl;
-	cout << "│    › Use w,a,s,d to navigate in space                     │" << endl;
-	cout << "│    › Click and drag mouse to turn camera left and right   │" << endl;
-	cout << "│    › Use q and e to move camera up and down               │" << endl;
-	cout << "│                                                           │" << endl;
-	cout << "│    Static camera options                                  │" << endl;
-	cout << "│    › a : Moves camera to the left                         │" << endl;
-	cout << "│    › d : Moves camera to the right                        │" << endl;
-	cout << "│    › w : Moves camera up                                  │" << endl;
-	cout << "│    › s : Moves camera down                                │" << endl;
-	cout << "│    › e : Zoom in                                          │" << endl;
-	cout << "│    › q : Zoom out                                         │" << endl;
-	cout << "│                                                           │" << endl;
-	cout << "│    Scene options                                          │" << endl;
-	cout << "│    › t : Cycle between drawing modes                      │" << endl;
-	cout << "│    › y : Cycle between camera modes                       │" << endl;
-	cout << "│                                                           │" << endl;
-	cout << "│    Press ESC at any time to exit program                  │" << endl;
-	cout << "└───────────────────────────────────────────────────────────┘" << endl;
+	cout << "┌─────────────────────────ENGINE HELP─────────────────────────┐" << endl;
+	cout << "│    Usage: ./engine [XML FILE]                               │" << endl;
+	cout << "│    Displays all primitives loaded from XML FILE             │" << endl;
+	cout << "│                                                             │" << endl;
+	cout << "│    FPS camera options                                       │" << endl;
+	cout << "│    › Use w,a,s,d to navigate in space                       │" << endl;
+	cout << "│    › Click and drag left mouse to turn camera horizontally  │" << endl;
+	cout << "│    › Click and drag right mouse to turn camera vertically   │" << endl;
+	cout << "│    › Use q and e to move camera up and down                 │" << endl;
+	cout << "│                                                             │" << endl;
+	cout << "│    Static camera options                                    │" << endl;
+	cout << "│    › a : Moves camera to the left                           │" << endl;
+	cout << "│    › d : Moves camera to the right                          │" << endl;
+	cout << "│    › w : Moves camera up                                    │" << endl;
+	cout << "│    › s : Moves camera down                                  │" << endl;
+	cout << "│    › e : Zoom in                                            │" << endl;
+	cout << "│    › q : Zoom out                                           │" << endl;
+	cout << "│                                                             │" << endl;
+	cout << "│    Scene options                                            │" << endl;
+	cout << "│    › l : Load saved camera settings                         │" << endl;
+	cout << "│    › p : Save camera settings                               │" << endl;
+	cout << "│    › t : Cycle between drawing modes                        │" << endl;
+	cout << "│    › 1 : Sets camera to static mode                         │" << endl;
+	cout << "│    › 2 : Sets camera to fps mode                            │" << endl;
+	cout << "│                                                             │" << endl;
+	cout << "│    Press ESC at any time to exit program                    │" << endl;
+	cout << "└─────────────────────────────────────────────────────────────┘" << endl;
 }
 
 
@@ -518,11 +534,11 @@ int main(int argc, char **argv) {
 		glEnable(GL_CULL_FACE);
 
 		// init fps camera
-		fps_camera = new fpsCamera(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+		fps_camera = new fpsCamera(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), FPS_CAMERA_CFG_FILE);
 		glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2);
 
 		// init static camera
-		static_camera = new staticCamera();
+		static_camera = new staticCamera(STATIC_CAMERA_CFG_FILE);
 
 		// enter GLUT's main cycle
 		glutMainLoop();

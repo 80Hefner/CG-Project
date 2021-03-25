@@ -6,23 +6,22 @@
 
 #include <string>
 #include <math.h>
+#include <iostream>
+#include <fstream>
 
 #include "fpsCamera.h"
 
 using namespace std;
 
-fpsCamera::fpsCamera(int width, int height) {
-    alpha = 2*M_PI/3;
-	beta = M_PI/2;
-	sensitivity = 0.01;
-    
-	eyeX = 0.0f;
-	eyeY = 1.0f;
-	eyeZ = 10.0f;
-	speed = 1.5;
+fpsCamera::fpsCamera(int width, int height, string cfg_file_str) {
+	// loads camera settings from cfg file
+	loadCamera(cfg_file_str);
 
+	// sets mouse starting point
 	startX = width / 2;
 	startY = height / 2;
+
+	// disables mouse tracking
 	tracking[0] = 0;
 	tracking[1] = 0;
 }
@@ -103,5 +102,64 @@ void fpsCamera::processMouseButtons(int button, int state, int xx, int yy) {
 			tracking[0] = 0;
 		else if (button == GLUT_RIGHT_BUTTON)
 			tracking[1] = 0;
+	}
+}
+
+
+void fpsCamera::loadCamera(string file_str) {
+	string line;
+	ifstream file;
+	
+	file.open(file_str.c_str(), ios::in);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			size_t pos = line.find(":");
+			string token = line.substr(0, pos);
+			string value = line.substr(pos+1, line.size());
+
+			if (token == "alpha")
+				this->alpha = atof(value.c_str());
+			else if (token == "beta")
+				this->beta = atof(value.c_str());
+			else if (token == "eyeX")
+				this->eyeX = atof(value.c_str());
+			else if (token == "eyeY")
+				this->eyeY = atof(value.c_str());
+			else if (token == "eyeZ")
+				this->eyeZ = atof(value.c_str());
+			else if (token == "sensitivity")
+				this->sensitivity = atof(value.c_str());
+			else if (token == "speed")
+				this->speed = atof(value.c_str());
+		}
+
+		file.close();
+	}
+	else {
+		cout << "Unable to open file: " << file_str.c_str() << "\n";
+	}
+}
+
+void fpsCamera::saveCamera(string file_str) {
+	ofstream file;
+	
+	file.open(file_str.c_str(), ios::out | ios::trunc);
+
+	if (file.is_open()) {
+
+		file << "alpha:" << this->alpha << "\n";
+		file << "beta:" << this->beta << "\n";
+		file << "eyeX:" << this->eyeX << "\n";
+		file << "eyeY:" << this->eyeY << "\n";
+		file << "eyeZ:" << this->eyeZ << "\n";
+		file << "sensitivity:" << this->sensitivity << "\n";
+		file << "speed:" << this->speed << "\n";
+
+		file.close();
+	}
+	else {
+		cout << "Unable to open file: " << file_str.c_str() << "\n";
 	}
 }

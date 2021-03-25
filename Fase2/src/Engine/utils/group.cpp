@@ -2,7 +2,7 @@
 #include <sstream>
 #include <vector>
 
-#include "group.hpp"
+#include "group.h"
 
 using namespace std;
 

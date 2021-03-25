@@ -20,12 +20,15 @@ class staticCamera {
         GLdouble gamma;
         GLdouble gamma_inc;
     public:
-        staticCamera();
+        staticCamera(string cfg_file_str);
         GLdouble getEyeX();
         GLdouble getEyeY();
         GLdouble getEyeZ();
 
         void reactRegularKey(unsigned char c);
+
+        void loadCamera(string file_str);
+        void saveCamera(string file_str);
 };
 
 #endif //STATIC_CAMERA_H
