@@ -8,7 +8,8 @@ add_executable(${PROJECT_NAME} Generator/generator.cpp utils/ponto.cpp Generator
 PROJECT(engine)
 add_executable(${PROJECT_NAME} Engine/engine.cpp
 								Engine/utils/group.cpp
-								Engine/utils/camera.cpp
+								Engine/utils/fpsCamera.cpp
+								Engine/utils/staticCamera.cpp
 								utils/ponto.cpp
 								utils/tinyxml2.cpp)
 

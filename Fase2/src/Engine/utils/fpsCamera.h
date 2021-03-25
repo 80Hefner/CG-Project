@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef FPS_CAMERA_H
+#define FPS_CAMERA_H
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -11,18 +11,19 @@
 
 using namespace std;
 
-class Camera {
+class fpsCamera {
     private:
         GLdouble alpha;
-
         float sensitivity;
 
         GLdouble eyeX;
         GLdouble eyeY;
         GLdouble eyeZ;
         float speed;
+
+        int startX, tracking;
     public:
-        Camera(int width, int height);
+        fpsCamera(int width, int height);
         GLdouble getEyeX();
         GLdouble getEyeY();
         GLdouble getEyeZ();
@@ -31,7 +32,8 @@ class Camera {
         GLdouble getCenterZ();
 
         void reactRegularKey(unsigned char c);
-        void reactMouseMovement(int xx, int yy);
+        void processMouseMotion(int xx, int yy);
+        void processMouseButtons(int button, int state, int xx, int yy);
 };
 
-#endif //CAMERA_H
+#endif //FPS_CAMERA_H

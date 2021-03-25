@@ -14,7 +14,8 @@
 #include "../utils/ponto.h"
 #include "../utils/tinyxml2.h"
 #include "utils/group.h"
-#include "utils/camera.h"
+#include "utils/fpsCamera.h"
+#include "utils/staticCamera.h"
 
 #define _3DFILESFOLDER "../../files3D/"
 #define XMLFILESFOLDER "../../filesXML/"
@@ -27,22 +28,24 @@ using namespace std;
 // * Global variables * //
 
 // Vector with all objects
-vector<Group> groups_vector;
+vector<Group> groups_vector = {};
 
 // Presentation options
 GLenum gl_mode = GL_LINE;
 GLenum gl_face = GL_FRONT_AND_BACK;
 
 // Camera values
-Camera* camera;
-int mouseX;
+fpsCamera* fps_camera;
+staticCamera* static_camera;
+int camera_mode = 0; // 0 -> static   1 -> fps
 
 // * Functions declarations * //
 
 void changeSize(int w, int h);
 void renderScene(void);
 void reactRegularKeys(unsigned char key, int x, int y);
-void reactMouseMovement(int xx, int yy);
+void processMouseMotion(int xx, int yy);
+void processMouseButtons(int button, int state, int xx, int yy);
 void drawAxis(void);
 void drawObject(vector<Ponto> points);
 void drawGroup(Group g);
@@ -88,9 +91,16 @@ void renderScene(void) {
 
 	// set the camera
 	glLoadIdentity();
-    gluLookAt(camera->getEyeX(), camera->getEyeY(), camera->getEyeZ(),
-		      camera->getCenterX(), camera->getCenterY(), camera->getCenterZ(),
-			  0.0f,1.0f,0.0f);
+	if (camera_mode == 1) {
+    	gluLookAt(fps_camera->getEyeX(), fps_camera->getEyeY(), fps_camera->getEyeZ(),
+		      	fps_camera->getCenterX(), fps_camera->getCenterY(), fps_camera->getCenterZ(),
+			  	0.0f,1.0f,0.0f);
+	}
+	else if (camera_mode == 0) {
+		gluLookAt(static_camera->getEyeX(), static_camera->getEyeY(), static_camera->getEyeZ(),
+		      	0.0f, 0.0f, 0.0f,
+			  	0.0f,1.0f,0.0f);
+	}
 	glPolygonMode(gl_face, gl_mode);
 
     // put drawing instructions here
@@ -106,21 +116,40 @@ void renderScene(void) {
 	glutSwapBuffers();
 }
 
+
+// * Mouse and Keyboard Functions * //
+
 // Function to react to events from regular keys
 void reactRegularKeys(unsigned char key, int xx, int yy) {
 	switch (key) {
-        case 'a': camera->reactRegularKey(key); break;
-		case 'd': camera->reactRegularKey(key); break;
-		case 'w': camera->reactRegularKey(key); break;
-		case 's': camera->reactRegularKey(key); break;
-		case 'e': camera->reactRegularKey(key); break;
-		case 'q': camera->reactRegularKey(key); break;
+        case 'a':
+			camera_mode ? fps_camera->reactRegularKey(key) : static_camera->reactRegularKey(key);
+			break;
+        case 'd':
+			camera_mode ? fps_camera->reactRegularKey(key) : static_camera->reactRegularKey(key);
+			break;
+		case 'w':
+			camera_mode ? fps_camera->reactRegularKey(key) : static_camera->reactRegularKey(key);
+			break;
+		case 's':
+			camera_mode ? fps_camera->reactRegularKey(key) : static_camera->reactRegularKey(key);
+			break;
+		case 'q':
+			camera_mode ? fps_camera->reactRegularKey(key) : static_camera->reactRegularKey(key);
+			break;
+		case 'e':
+			camera_mode ? fps_camera->reactRegularKey(key) : static_camera->reactRegularKey(key);
+			break;
+
 		case 't':
 			if (gl_mode == GL_FILL) gl_mode = GL_LINE;
 			else if (gl_mode == GL_LINE) gl_mode = GL_POINT;
 			else if (gl_mode == GL_POINT) gl_mode = GL_FILL;
 
 			glPolygonMode(gl_face,gl_mode);
+			break;
+		case 'y':
+			camera_mode = ++camera_mode % 2;
 			break;
 		case 27:
 			exit(0);
@@ -130,13 +159,22 @@ void reactRegularKeys(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
 }
 
-// Function to react to events from the mouse
-void reactMouseMovement(int xx, int yy) {
-	camera->reactMouseMovement(xx-mouseX, 0);
-	mouseX = xx;
-
-	glutPostRedisplay();
+// Function to process mouse motion
+void processMouseMotion(int xx, int yy) {
+	if (camera_mode) {
+		fps_camera->processMouseMotion(xx, yy);
+		glutPostRedisplay();
+	}
 }
+
+// Function to process mouse buttons
+void processMouseButtons(int button, int state, int xx, int yy) {
+	if (camera_mode) {
+		fps_camera->processMouseButtons(button, state, xx, yy);
+		glutPostRedisplay();
+	}
+}
+
 
 // * Draw Functions * //
 
@@ -217,7 +255,6 @@ void drawGroup(Group g) {
 }
 
 
-
 // * Parsing Functions * //
 
 // Function to load a .3d file into a vector of points
@@ -269,9 +306,10 @@ int loadXMLFile(string xmlFileString) {
 	// Trying to get all group elements
 	XMLElement* group_element = root->FirstChildElement("group");
 	while (group_element) {
-		groups_vector.push_back(parseXMLGroupElement(group_element));
+		Group g = parseXMLGroupElement(group_element);
+		groups_vector.push_back(g);
 
-		group_element = root->NextSiblingElement("group");
+		group_element = group_element->NextSiblingElement("group");
 	}
 
 	return 1;
@@ -399,7 +437,8 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 	// Trying to get group elements
 	XMLElement* group_element = main_element->FirstChildElement("group");
 	while (group_element) {
-		new_group.addGroup(parseXMLGroupElement(group_element));
+		Group g = parseXMLGroupElement(group_element);
+		new_group.addGroup(g);
 
 		group_element = group_element->NextSiblingElement("group");
 	}
@@ -412,21 +451,29 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 // Function to print help menu
 void engineHelpMenu() {
-	cout << "┌───────────────────────ENGINE HELP───────────────────────┐" << endl;
-	cout << "│    Usage: ./engine [XML FILE]                           │" << endl;
-	cout << "│    Displays all primitives loaded from XML FILE         │" << endl;
-	cout << "│                                                         │" << endl;
-	cout << "│    Camera options                                       │" << endl;
-	cout << "│        Use w,a,s,d to navigate in space                 │" << endl;
-	cout << "│        Use mouse to turn camera left and right          │" << endl;
-	cout << "│        q : Moves camera position down                   │" << endl;
-	cout << "│        e : Moves camera position up                     │" << endl;
-	cout << "│                                                         │" << endl;
-	cout << "│    Scene options                                        │" << endl;
-	cout << "│        t : Cycle between drawing modes                  │" << endl;
-	cout << "│                                                         │" << endl;
-	cout << "│    Press ESC at any time to exit program                │" << endl;
-	cout << "└─────────────────────────────────────────────────────────┘" << endl;
+	cout << "┌────────────────────────ENGINE HELP────────────────────────┐" << endl;
+	cout << "│    Usage: ./engine [XML FILE]                             │" << endl;
+	cout << "│    Displays all primitives loaded from XML FILE           │" << endl;
+	cout << "│                                                           │" << endl;
+	cout << "│    FPS camera options                                     │" << endl;
+	cout << "│    › Use w,a,s,d to navigate in space                     │" << endl;
+	cout << "│    › Click and drag mouse to turn camera left and right   │" << endl;
+	cout << "│    › Use q and e to move camera up and down               │" << endl;
+	cout << "│                                                           │" << endl;
+	cout << "│    Static camera options                                  │" << endl;
+	cout << "│    › a : Moves camera to the left                         │" << endl;
+	cout << "│    › d : Moves camera to the right                        │" << endl;
+	cout << "│    › w : Moves camera up                                  │" << endl;
+	cout << "│    › s : Moves camera down                                │" << endl;
+	cout << "│    › e : Zoom in                                          │" << endl;
+	cout << "│    › q : Zoom out                                         │" << endl;
+	cout << "│                                                           │" << endl;
+	cout << "│    Scene options                                          │" << endl;
+	cout << "│    › t : Cycle between drawing modes                      │" << endl;
+	cout << "│    › y : Cycle between camera modes                       │" << endl;
+	cout << "│                                                           │" << endl;
+	cout << "│    Press ESC at any time to exit program                  │" << endl;
+	cout << "└───────────────────────────────────────────────────────────┘" << endl;
 }
 
 
@@ -457,18 +504,21 @@ int main(int argc, char **argv) {
 		glutDisplayFunc(renderScene);
 		glutReshapeFunc(changeSize);
 
-		// put here the registration of the keyboard callbacks
+		// put here the registration of the keyboard and mouse callbacks
 		glutKeyboardFunc(reactRegularKeys);
-		glutPassiveMotionFunc(reactMouseMovement);
+		glutMouseFunc(processMouseButtons);
+		glutMotionFunc(processMouseMotion);
 
 		//  OpenGL settings
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 
-		// init camera
-		camera = new Camera(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+		// init fps camera
+		fps_camera = new fpsCamera(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 		glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2);
-		mouseX = glutGet(GLUT_WINDOW_WIDTH)/2;
+
+		// init static camera
+		static_camera = new staticCamera();
 
 		// enter GLUT's main cycle
 		glutMainLoop();
