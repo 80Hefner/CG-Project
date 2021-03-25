@@ -8,14 +8,8 @@
 
 using namespace std;
 
-enum Trans_type {TRANSLATE, ROTATE, SCALE};
-
 class Transformation {
-    private:
-        Trans_type t;
     public:
-        Transformation(Trans_type t) {this->t = t;};
-        Trans_type getTransType() {return this->t;};
         virtual void smt(){};
 };
 
@@ -27,8 +21,7 @@ class Translate : public Transformation {
         float getY() {return this->y;};
         float getZ() {return this->z;};
         Translate();
-        Translate(float x, float y, float z)
-        : Transformation(TRANSLATE){
+        Translate(float x, float y, float z) {
             this->x = x;
             this->y = y;
             this->z = z;
@@ -44,8 +37,7 @@ class Rotate : public Transformation {
         float getAxisY() {return this->axisY;};
         float getAxisZ() {return this->axisZ;};
         Rotate();
-        Rotate(float angle, float axisX, float axisY, float axisZ)
-        : Transformation(ROTATE){
+        Rotate(float angle, float axisX, float axisY, float axisZ) {
             this->angle = angle;
             this->axisX = axisX;
             this->axisY = axisY;
@@ -61,8 +53,7 @@ class Scale : public Transformation {
         float getY() {return this->y;};
         float getZ() {return this->z;};
         Scale();
-        Scale(float x, float y, float z)
-        : Transformation(SCALE){
+        Scale(float x, float y, float z) {
             this->x = x;
             this->y = y;
             this->z = z;
