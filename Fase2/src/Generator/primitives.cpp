@@ -238,7 +238,7 @@ Ponto generateTorusPoint(float innerRadius, float outerRadius , float alpha, flo
 }
 
 // Creates a torus centered on origin
-vector<Ponto> torus(float innerRadius, float outerRadius , int stacks, int slices) {
+vector<Ponto> torus(float innerRadius, float outerRadius, int slices, int stacks) {
 	vector<Ponto> points;
 	float alpha, alpha2, beta, beta2;
 

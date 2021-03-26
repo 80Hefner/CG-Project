@@ -44,6 +44,9 @@ void generatorHelpMenu() {
     cout << "│                                                                                            │" << endl;
     cout << "│      cone [RADIUS] [HEIGHT] [SLICES] [STACKS]                                              │" << endl;
     cout << "│          Creates a cone with given radius and height, divided in given slices and stacks.  │" << endl;
+    cout << "│                                                                                            │" << endl;
+    cout << "│      torus [INNER_RADIUS] [OUTER_RADIUS] [SLICES] [STACKS]                                 │" << endl;
+    cout << "│          Creates a torus with given radiuses, divided in given slices and stacks.          │" << endl;
 	cout << "└────────────────────────────────────────────────────────────────────────────────────────────┘" << endl;
 }
 
@@ -106,10 +109,10 @@ int main(int argc, char** argv) {
     else if (argc == 7 && strcmp(argv[1], "torus") == 0) {
         float innerRadius = atof(argv[2]);
         float outerRadius = atof(argv[3]);
-        int stacks = atoi(argv[4]);
         int slices = atoi(argv[5]);
+        int stacks = atoi(argv[4]);
 
-        pontos = torus(innerRadius, outerRadius, stacks, slices);
+        pontos = torus(innerRadius, outerRadius, slices, stacks);
 
         fileString = argv[6];
         fileString = "../../files3D/" + fileString;
