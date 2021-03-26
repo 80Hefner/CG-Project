@@ -1,0 +1,138 @@
+<scene>
+
+    <group> <!-- Sun -->
+        <scale  X="4.5" Y="4.5" Z="4.5" />
+        <color R="0.973" G="0.878" B="0" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+    </group>
+
+    <group> <!-- Mercury -->
+        <translate X="8.5" Y="0" Z="0" />
+        <scale  X="0.2" Y="0.2" Z="0.2" />
+        <color R="0.757" G="0.808" B="0.871" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+    </group>
+    
+    <group> <!-- Venus -->
+        <translate X="11.5" Y="0" Z="0" />
+        <scale  X="0.55" Y="0.55" Z="0.55" />
+        <color R="0.843" G="0.718" B="0.424" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+    </group>
+    
+    <group> <!-- Earth -->
+        <translate X="14.5" Y="0" Z="0" />
+        <scale  X="0.6" Y="0.6" Z="0.6" />
+        <color R="0.212" G="0.486" B="0.996" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+        <group> <!-- Moon -->
+            <scale  X="0.15" Y="0.15" Z="0.15" />
+            <translate X="0" Y="0" Z="1.3" />
+            <color R="0.816" G="0.863" B="0.918" />
+            <models>
+                <model file="sphere.3d" />
+            </models>
+        </group>
+    </group>
+    
+    <group> <!-- Mars -->
+        <translate X="17.5" Y="0" Z="0" />
+        <scale  X="0.3" Y="0.3" Z="0.3" />
+        <color R="0.820" G="0.208" B="0.008" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+    </group>
+
+    <group> <!-- Jupiter -->
+        <translate X="35" Y="0" Z="0" />
+        <scale  X="3.2" Y="3.2" Z="3.2" />
+        <color R="0.769" G="0.463" B="0.137" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+        <group> <!-- Io -->
+            <scale  X="0.06" Y="0.06" Z="0.06" />
+            <translate X="0" Y="0" Z="1.3" />
+            <color R="0.910" G="0.870" B="0.388" />
+            <models>
+                <model file="sphere.3d" />
+            </models>
+        </group>
+        <group> <!-- Europa -->
+            <scale  X="0.06" Y="0.06" Z="0.06" />
+            <translate X="0.65" Y="0" Z="1.13" />
+            <color R="0.537" G="0.290" B="0.161" />
+            <models>
+                <model file="sphere.3d" />
+            </models>
+        </group>
+        <group> <!-- Ganymede -->
+            <scale  X="0.1" Y="0.1" Z="0.1" />
+            <translate X="-0.65" Y="0" Z="1.13" />
+            <color R="0.749" G="0.631" B="0.537" />
+            <models>
+                <model file="sphere.3d" />
+            </models>
+        </group>
+        <group> <!-- Callisto -->
+            <scale  X="0.1" Y="0.1" Z="0.1" />
+            <translate X="1.13" Y="0" Z="0.65" />
+            <color R="0.110" G="0.043" B="0.169" />
+            <models>
+                <model file="sphere.3d" />
+            </models>
+        </group>
+
+    </group>
+
+    <group> <!-- Saturn -->
+        <translate X="60" Y="0" Z="0" />
+        <scale  X="2.6" Y="2.6" Z="2.6" />
+        <color R="0.863" G="0.812" B="0.400" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+        <group> <!-- Ring -->
+            <scale Y="0" />
+            <color R="0.757" G="0.808" B="0.871" />
+            <models>
+                <model file="saturn_ring.3d" />
+            </models>
+        </group>
+    </group>
+
+    <group> <!-- Uranus -->
+        <translate X="100" Y="0" Z="0" />
+        <scale  X="1.7" Y="1.7" Z="1.7" />
+        <color R="0.471" G="0.867" B="0.976" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+        <group> <!-- Ring -->
+            <rotate angle="80" axisY="-0.4" axisZ="1" />
+            <color R="0.820" G="0.208" B="0.008" />
+            <models>
+                <model file="uranus_ring.3d" />
+            </models>
+        </group>
+    </group>
+
+    <group> <!-- Neptune -->
+        <translate X="140" Y="0" Z="0" />
+        <scale  X="1.7" Y="1.7" Z="1.7" />
+        <color R="0.067" G="0.302" B="0.992" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+    </group>
+
+</scene>

@@ -392,17 +392,17 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 		// Get x attribute
 		const XMLAttribute* x_attribute = scale_element->FindAttribute("X");
 		float x_scale;
-		x_attribute ? x_scale = atof(x_attribute->Value()) : x_scale = 0;
+		x_attribute ? x_scale = atof(x_attribute->Value()) : x_scale = 1;
 
 		// Get y attribute
 		const XMLAttribute* y_attribute = scale_element->FindAttribute("Y");
 		float y_scale;
-		y_attribute ? y_scale = atof(y_attribute->Value()) : y_scale = 0;
+		y_attribute ? y_scale = atof(y_attribute->Value()) : y_scale = 1;
 
 		// Get z attribute
 		const XMLAttribute* z_attribute = scale_element->FindAttribute("Z");
 		float z_scale;
-		z_attribute ? z_scale = atof(z_attribute->Value()) : z_scale = 0;
+		z_attribute ? z_scale = atof(z_attribute->Value()) : z_scale = 1;
 
 		new_group.addScale(x_scale, y_scale, z_scale);
 
