@@ -10,10 +10,10 @@
 using namespace std;
 
 
-// Cria��o de um plano na superf�cie do plano XZ.
+// Criação de um plano na superfície do plano XZ.
 vector<Ponto> plane(float size) {
 
-	//vector<Ponto> � o mesmo que ter um array dinamico de Ponto
+	//vector<Ponto> É o mesmo que ter um array dinamico de Ponto
 	vector<Ponto> pontos;
 
 	float distancia = size / 2;
@@ -30,7 +30,7 @@ vector<Ponto> plane(float size) {
 
 }
 
-// Cria��o de uma box com as dimens�es dadas e com um numero de Divis�es em iguais sec��es da caixa
+// Criação de uma box com as dimensões dadas e com um numero de Divisões em iguais secções da caixa
 vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 
 	vector<Ponto> pontos;
@@ -118,7 +118,7 @@ vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes) {
 	return pontos;
 }
 
-//Cria��o de um cone com um dado raio, uma altura, nr slices e de stacks
+// Criação de um cone com um dado raio, uma altura, nr slices e de stacks
 vector<Ponto> cone(float raioBase, float alturaCone, int nrSlices, int nrStacks) {
 
 	vector<Ponto> pontos;
@@ -173,7 +173,7 @@ vector<Ponto> cone(float raioBase, float alturaCone, int nrSlices, int nrStacks)
 	return pontos;
 }
 
-//Cria��o de uma esfera com um dado raio, nr slices e de stacks
+// Criação de uma esfera com um dado raio, nr slices e de stacks
 vector<Ponto> sphere(float raio, int nrSlices, int nrStacks) {
 
 	vector<Ponto> pontos;
@@ -227,4 +227,48 @@ vector<Ponto> sphere(float raio, int nrSlices, int nrStacks) {
 	}
 
 	return pontos;
+}
+
+
+// Torus auxiliary function
+Ponto generateTorusPoint(float innerRadius, float outerRadius , float alpha, float beta) {
+	return Ponto(cos(alpha) * (innerRadius * sin(beta) + outerRadius),
+					cos(beta) * innerRadius,
+					sin(alpha) * (innerRadius * sin(beta) + outerRadius));
+}
+
+// Creates a torus centered on origin
+vector<Ponto> torus(float innerRadius, float outerRadius , int stacks, int slices) {
+	vector<Ponto> points;
+	float alpha, alpha2, beta, beta2;
+
+	float sliceAngle = (2 * M_PI) / slices;
+	float stackAngle = (2 * M_PI) / stacks;
+
+	// Process each slice
+	for (int i = 0; i < slices; i++) {
+		alpha = i * sliceAngle;
+		alpha2 = (i+1) * sliceAngle;
+
+		// Process each stack
+		for (int j = 0; j < stacks; j++) {
+			beta = j * stackAngle;
+			beta2 = (j+1) * stackAngle;
+
+			Ponto p1 = generateTorusPoint(innerRadius, outerRadius, alpha, beta);
+			Ponto p2 = generateTorusPoint(innerRadius, outerRadius, alpha, beta2);
+			Ponto p3 = generateTorusPoint(innerRadius, outerRadius, alpha2, beta2);
+			Ponto p4 = generateTorusPoint(innerRadius, outerRadius, alpha2, beta);
+
+			points.push_back(p1);
+			points.push_back(p2);
+			points.push_back(p3);
+
+			points.push_back(p1);
+			points.push_back(p3);
+			points.push_back(p4);
+		}
+	}
+
+	return points;
 }

@@ -103,5 +103,18 @@ int main(int argc, char** argv) {
 
         writePointsToFile(pontos, fileString);
     }
+    else if (argc == 7 && strcmp(argv[1], "torus") == 0) {
+        float innerRadius = atof(argv[2]);
+        float outerRadius = atof(argv[3]);
+        int stacks = atoi(argv[4]);
+        int slices = atoi(argv[5]);
+
+        pontos = torus(innerRadius, outerRadius, stacks, slices);
+
+        fileString = argv[6];
+        fileString = "../../files3D/" + fileString;
+
+        writePointsToFile(pontos, fileString);
+    }
 
 }
