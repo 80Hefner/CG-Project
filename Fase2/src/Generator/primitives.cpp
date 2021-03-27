@@ -255,11 +255,13 @@ vector<Ponto> torus(float innerRadius, float outerRadius, int slices, int stacks
 			beta = j * stackAngle;
 			beta2 = (j+1) * stackAngle;
 
+			// Generates all four points associated to this slice and stack
 			Ponto p1 = generateTorusPoint(innerRadius, outerRadius, alpha, beta);
 			Ponto p2 = generateTorusPoint(innerRadius, outerRadius, alpha, beta2);
 			Ponto p3 = generateTorusPoint(innerRadius, outerRadius, alpha2, beta2);
 			Ponto p4 = generateTorusPoint(innerRadius, outerRadius, alpha2, beta);
 
+			// Adds the two triangles associated to this slice and stack
 			points.push_back(p1);
 			points.push_back(p2);
 			points.push_back(p3);
