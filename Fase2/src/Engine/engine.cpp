@@ -12,7 +12,7 @@
 #include <fstream>
 
 #include "../utils/ponto.h"
-#include "../utils/tinyxml2.h"
+#include "utils/tinyxml2.h"
 #include "utils/group.h"
 #include "utils/fpsCamera.h"
 #include "utils/staticCamera.h"
