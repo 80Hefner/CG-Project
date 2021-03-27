@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../../utils/ponto.h"
+#include "../../utils/object.h"
 
 using namespace std;
 
@@ -83,7 +84,7 @@ class Group {
     private:
         vector<Transformation*> transformations;
         Color* color;
-        vector<vector<Ponto>> objects;
+        vector<Object> objects;
         vector<Group> groups;
     public:
         Group();
@@ -95,8 +96,8 @@ class Group {
         void setColor(float r, float g, float b);
         Color* getColor();
 
-        void addObject(vector<Ponto> object);
-        vector<vector<Ponto>> getObjects();
+        void addObject(Object object);
+        vector<Object> getObjects();
         void addGroup(Group group);
         vector<Group> getGroups();
 };

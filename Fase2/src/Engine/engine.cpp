@@ -12,6 +12,7 @@
 #include <fstream>
 
 #include "../utils/ponto.h"
+#include "../utils/object.h"
 #include "utils/tinyxml2.h"
 #include "utils/group.h"
 #include "utils/fpsCamera.h"
@@ -50,7 +51,7 @@ void reactRegularKeys(unsigned char key, int x, int y);
 void processMouseMotion(int xx, int yy);
 void processMouseButtons(int button, int state, int xx, int yy);
 void drawAxis(void);
-void drawObject(vector<Ponto> points);
+void drawObject(Object object);
 void drawGroup(Group g);
 vector<Ponto> load3dFile(string _3dFile);
 int loadXMLFile(string xmlFileString);
@@ -209,7 +210,9 @@ void drawAxis(void) {
 }
 
 // Function to draw a single object, given its points
-void drawObject(vector<Ponto> points) {
+void drawObject(Object object) {
+	vector<Ponto> points = object.getPoints();
+
 	for (int j = 0; j < points.size(); j+=3) {
 		glBegin(GL_TRIANGLES);
 		glVertex3f(points[j].getX(),points[j].getY(),points[j].getZ());
@@ -255,8 +258,8 @@ void drawGroup(Group g) {
 	glColor3f(cl->getR(), cl->getG(), cl->getB());
 
 	// Drawing objects in this group
-	vector<vector<Ponto>> objects = g.getObjects();
-	for (vector<Ponto> object : objects) {
+	vector<Object> objects = g.getObjects();
+	for (Object object : objects) {
 		drawObject(object);
 	}
 
@@ -439,13 +442,26 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 		// Get all model elements
 		XMLElement* model_element = models_element->FirstChildElement("model");
 		while (model_element) {
+			vector<Ponto> object_points;
+			string object_description;
+
 			// Parse model file attribute
 			const XMLAttribute* file_attribute = model_element->FindAttribute("file");
 			if (file_attribute) {
 				string file = file_attribute->Value();
-				vector<Ponto> file_object = load3dFile(_3DFILESFOLDER + file);
-				new_group.addObject(file_object);
+				object_points = load3dFile(_3DFILESFOLDER + file);
 			}
+
+			// Parse model description attribute
+			const XMLAttribute* desc_attribute = model_element->FindAttribute("description");			
+			if (desc_attribute)
+				object_description = desc_attribute->Value();
+			else
+				object_description = "Undefined Object";
+
+			Object new_object = Object(object_description, object_points);
+			new_group.addObject(new_object);
+			
 			model_element = model_element->NextSiblingElement("models");
 		}
 	}

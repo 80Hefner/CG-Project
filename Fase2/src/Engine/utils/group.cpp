@@ -43,11 +43,11 @@ Color* Group::getColor() {
     return this->color;
 }
 
-void Group::addObject(vector<Ponto> object) {
+void Group::addObject(Object object) {
     this->objects.push_back(object);
 }
 
-vector<vector<Ponto>> Group::getObjects() {
+vector<Object> Group::getObjects() {
     return this->objects;
 }
 

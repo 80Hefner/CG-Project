@@ -10,8 +10,8 @@ add_executable(${PROJECT_NAME} Engine/engine.cpp
 								Engine/utils/group.cpp
 								Engine/utils/fpsCamera.cpp
 								Engine/utils/staticCamera.cpp
-								utils/ponto.cpp
-								utils/tinyxml2.cpp)
+								Engine/utils/tinyxml2.cpp
+								utils/ponto.cpp)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
