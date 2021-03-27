@@ -10,7 +10,7 @@ using namespace std;
 
 Group::Group() {
     transformations = {};
-    color = Color();
+    color = nullptr;
     objects = {};
     groups = {};
 }
@@ -35,11 +35,11 @@ vector<Transformation*> Group::getTransformations() {
 }
 
 void Group::setColor(float r, float g, float b) {
-    Color cl = Color(r,g,b);
+    Color* cl = new Color(r,g,b);
     this->color = cl;
 }
 
-Color Group::getColor() {
+Color* Group::getColor() {
     return this->color;
 }
 

@@ -221,7 +221,7 @@ void drawObject(vector<Ponto> points) {
 
 // Function to draw a single group
 void drawGroup(Group g) {
-	
+
 	// Set the model view matrix as current, just for safety
 	glMatrixMode(GL_MODELVIEW);
 
@@ -251,8 +251,8 @@ void drawGroup(Group g) {
 	}
 
 	// Trying to get scales from group
-	Color cl = g.getColor();
-	glColor3f(cl.getR(), cl.getG(), cl.getB());
+	Color* cl = g.getColor();
+	glColor3f(cl->getR(), cl->getG(), cl->getB());
 
 	// Drawing objects in this group
 	vector<vector<Ponto>> objects = g.getObjects();
@@ -283,7 +283,7 @@ vector<Ponto> load3dFile(string _3dFile) {
 	file.open(_3dFile.c_str(), ios::in);
 	getline(file, line);
 	int nr_points = atoi(line.c_str());
-		
+
 
 	if (file.is_open()) {
 		for (int j = 0; j < nr_points; j++) {

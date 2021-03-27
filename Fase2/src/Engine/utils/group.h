@@ -82,7 +82,7 @@ class Color {
 class Group {
     private:
         vector<Transformation*> transformations;
-        Color color;
+        Color* color;
         vector<vector<Ponto>> objects;
         vector<Group> groups;
     public:
@@ -93,7 +93,7 @@ class Group {
         vector<Transformation*> getTransformations();
 
         void setColor(float r, float g, float b);
-        Color getColor();
+        Color* getColor();
 
         void addObject(vector<Ponto> object);
         vector<vector<Ponto>> getObjects();
