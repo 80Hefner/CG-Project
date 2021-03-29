@@ -25,8 +25,6 @@
 
 using namespace tinyxml2;
 using namespace std;
-// TODO: criar xml sistema solar
-// TODO: poder andar com a camara a vontade
 
 // * Global variables * //
 
@@ -297,7 +295,7 @@ vector<Ponto> load3dFile(string _3dFile) {
 		file.close();
 	}
 	else {
-		cout << "Unable to open file: " << _3dFile.c_str() << "\n";
+		std::cout << "Unable to open file: " << _3dFile.c_str() << "\n";
 	}
 
 	return points;
@@ -311,14 +309,14 @@ int loadXMLFile(string xmlFileString) {
 	// Trying to open XML File
 	XMLError load_result = doc.LoadFile(xmlFileString.c_str());
 	if (load_result != XML_SUCCESS)  {
-		cout << "Unable to load XML File!\n";
+		std::cout << "Unable to load XML File!\n";
 		return 0;
 	}
 
 	// Trying to get scene element
 	XMLElement* root = doc.FirstChildElement("scene");
 	if (root == nullptr) {
-		cout << "XML File has wrong sintax! -> scene element\n";
+		std::cout << "XML File has wrong sintax! -> scene element\n";
 		return 0;
 	}
 
@@ -340,7 +338,7 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 	// Trying to get translate element
 	XMLElement* translate_element = main_element->FirstChildElement("translate");
-	while (translate_element) {
+	if (translate_element) {
 		// Get x attribute
 		const XMLAttribute* x_attribute = translate_element->FindAttribute("X");
 		float x_trans;
@@ -358,12 +356,14 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 		new_group.addTranslate(x_trans, y_trans, z_trans);
 
-		translate_element = translate_element->NextSiblingElement("translate");
+		// Only used if we wanted to support multiple translates in a group
+		// If so, needed to change the 'if' to a 'while' too
+		//translate_element = translate_element->NextSiblingElement("translate");
 	}
 
 	// Trying to get rotate element
 	XMLElement* rotate_element = main_element->FirstChildElement("rotate");
-	while (rotate_element) {
+	if (rotate_element) {
 		// Get angle attribute
 		const XMLAttribute* angle_attribute = rotate_element->FindAttribute("angle");
 		float angle_rot;
@@ -386,12 +386,14 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 		new_group.addRotate(angle_rot, axisX_rot, axisY_rot, axisZ_rot);
 
-		rotate_element = rotate_element->NextSiblingElement("rotate");
+		// Only used if we wanted to support multiple rotates in a group
+		// If so, needed to change the 'if' to a 'while' too
+		//rotate_element = rotate_element->NextSiblingElement("rotate");
 	}
 
 	// Trying to get scale element
 	XMLElement* scale_element = main_element->FirstChildElement("scale");
-	while (scale_element) {
+	if (scale_element) {
 		// Get x attribute
 		const XMLAttribute* x_attribute = scale_element->FindAttribute("X");
 		float x_scale;
@@ -409,7 +411,9 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 		new_group.addScale(x_scale, y_scale, z_scale);
 
-		scale_element = scale_element->NextSiblingElement("scale");
+		// Only used if we wanted to support multiple scales in a group
+		// If so, needed to change the 'if' to a 'while' too
+		//scale_element = scale_element->NextSiblingElement("scale");
 	}
 
 	// Trying to get color element. If not found, sets color to white
@@ -461,7 +465,7 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 			Object new_object = Object(object_description, object_points);
 			new_group.addObject(new_object);
-			
+
 			model_element = model_element->NextSiblingElement("models");
 		}
 	}
@@ -483,33 +487,33 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 // Function to print help menu
 void engineHelpMenu() {
-	cout << "┌─────────────────────────ENGINE HELP─────────────────────────┐" << endl;
-	cout << "│    Usage: ./engine [XML FILE]                               │" << endl;
-	cout << "│    Displays all primitives loaded from XML FILE             │" << endl;
-	cout << "│                                                             │" << endl;
-	cout << "│    FPS camera options                                       │" << endl;
-	cout << "│    › Use w,a,s,d to navigate in space                       │" << endl;
-	cout << "│    › Click and drag left mouse to turn camera horizontally  │" << endl;
-	cout << "│    › Click and drag right mouse to turn camera vertically   │" << endl;
-	cout << "│    › Use q and e to move camera up and down                 │" << endl;
-	cout << "│                                                             │" << endl;
-	cout << "│    Static camera options                                    │" << endl;
-	cout << "│    › a : Moves camera to the left                           │" << endl;
-	cout << "│    › d : Moves camera to the right                          │" << endl;
-	cout << "│    › w : Moves camera up                                    │" << endl;
-	cout << "│    › s : Moves camera down                                  │" << endl;
-	cout << "│    › e : Zoom in                                            │" << endl;
-	cout << "│    › q : Zoom out                                           │" << endl;
-	cout << "│                                                             │" << endl;
-	cout << "│    Scene options                                            │" << endl;
-	cout << "│    › l : Load saved camera settings                         │" << endl;
-	cout << "│    › p : Save camera settings                               │" << endl;
-	cout << "│    › t : Cycle between drawing modes                        │" << endl;
-	cout << "│    › 1 : Sets camera to static mode                         │" << endl;
-	cout << "│    › 2 : Sets camera to fps mode                            │" << endl;
-	cout << "│                                                             │" << endl;
-	cout << "│    Press ESC at any time to exit program                    │" << endl;
-	cout << "└─────────────────────────────────────────────────────────────┘" << endl;
+	std::cout << "┌─────────────────────────ENGINE HELP─────────────────────────┐" << endl;
+	std::cout << "│    Usage: ./engine [XML FILE]                               │" << endl;
+	std::cout << "│    Displays all primitives loaded from XML FILE             │" << endl;
+	std::cout << "│                                                             │" << endl;
+	std::cout << "│    FPS camera options                                       │" << endl;
+	std::cout << "│    › Use w,a,s,d to navigate in space                       │" << endl;
+	std::cout << "│    › Click and drag left mouse to turn camera horizontally  │" << endl;
+	std::cout << "│    › Click and drag right mouse to turn camera vertically   │" << endl;
+	std::cout << "│    › Use q and e to move camera up and down                 │" << endl;
+	std::cout << "│                                                             │" << endl;
+	std::cout << "│    Static camera options                                    │" << endl;
+	std::cout << "│    › a : Moves camera to the left                           │" << endl;
+	std::cout << "│    › d : Moves camera to the right                          │" << endl;
+	std::cout << "│    › w : Moves camera up                                    │" << endl;
+	std::cout << "│    › s : Moves camera down                                  │" << endl;
+	std::cout << "│    › e : Zoom in                                            │" << endl;
+	std::cout << "│    › q : Zoom out                                           │" << endl;
+	std::cout << "│                                                             │" << endl;
+	std::cout << "│    Scene options                                            │" << endl;
+	std::cout << "│    › l : Load saved camera settings                         │" << endl;
+	std::cout << "│    › p : Save camera settings                               │" << endl;
+	std::cout << "│    › t : Cycle between drawing modes                        │" << endl;
+	std::cout << "│    › 1 : Sets camera to static mode                         │" << endl;
+	std::cout << "│    › 2 : Sets camera to fps mode                            │" << endl;
+	std::cout << "│                                                             │" << endl;
+	std::cout << "│    Press ESC at any time to exit program                    │" << endl;
+	std::cout << "└─────────────────────────────────────────────────────────────┘" << endl;
 }
 
 
@@ -525,7 +529,7 @@ int main(int argc, char **argv) {
         string xmlFileString = argv[1];
     	xmlFileString = XMLFILESFOLDER + xmlFileString;
 		if (loadXMLFile(xmlFileString) == 0) {
-			cout << "Error reading XML File!\n";
+			std::cout << "Error reading XML File!\n";
 			return 0;
 		}
 
@@ -560,7 +564,7 @@ int main(int argc, char **argv) {
 		glutMainLoop();
     }
 	else {
-		cout << "Invalid input!\n";
+		std::cout << "Invalid input!\n";
 	}
 
 	return 1;
