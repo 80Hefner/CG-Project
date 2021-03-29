@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 #endif
 
+#define _USE_MATH_DEFINES // always before the include
 #include <math.h>
 #include <string>
 #include <vector>
