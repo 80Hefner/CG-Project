@@ -5,9 +5,9 @@
 #include <GL/glut.h>
 #endif
 
-#define _USE_MATH_DEFINES // always before the include
-#include <string>
+#define _USE_MATH_DEFINES
 #include <math.h>
+#include <string>
 #include <iostream>
 #include <fstream>
 
@@ -52,7 +52,7 @@ void staticCamera::reactRegularKey(unsigned char c) {
 void staticCamera::loadCamera(string file_str) {
 	string line;
 	ifstream file;
-	
+
 	file.open(file_str.c_str(), ios::in);
 
 	if (file.is_open()) {
@@ -85,7 +85,7 @@ void staticCamera::loadCamera(string file_str) {
 
 void staticCamera::saveCamera(string file_str) {
 	ofstream file;
-	
+
 	file.open(file_str.c_str(), ios::out | ios::trunc);
 
 	if (file.is_open()) {
@@ -96,7 +96,7 @@ void staticCamera::saveCamera(string file_str) {
 		file << "beta_inc:" << this->beta_inc << "\n";
 		file << "gamma:" << this->gamma << "\n";
 		file << "gamma_inc:" << this->gamma_inc << "\n";
-		
+
         file.close();
 	}
 	else {

@@ -1,4 +1,3 @@
-// Aqui é para correr o gerador com uma main e criar ficheiros .3d que ele pedir ou dar erro se não der
 #include <vector>
 #include <string.h>
 #include <iostream>

@@ -5,9 +5,9 @@
 #include <GL/glut.h>
 #endif
 
-#define _USE_MATH_DEFINES // always before the include
-#include <string>
+#define _USE_MATH_DEFINES
 #include <math.h>
+#include <string>
 #include <iostream>
 #include <fstream>
 
@@ -76,7 +76,7 @@ void fpsCamera::processMouseMotion(int xx, int yy) {
 
 		alpha -= deltaX * sensitivity;
 	}
-	
+
 	if (tracking[1] == 1) {
 		int deltaY = yy - startY;
 		startY = yy;
@@ -111,7 +111,7 @@ void fpsCamera::processMouseButtons(int button, int state, int xx, int yy) {
 void fpsCamera::loadCamera(string file_str) {
 	string line;
 	ifstream file;
-	
+
 	file.open(file_str.c_str(), ios::in);
 
 	if (file.is_open()) {
@@ -146,7 +146,7 @@ void fpsCamera::loadCamera(string file_str) {
 
 void fpsCamera::saveCamera(string file_str) {
 	ofstream file;
-	
+
 	file.open(file_str.c_str(), ios::out | ios::trunc);
 
 	if (file.is_open()) {

@@ -5,7 +5,7 @@
 #include <GL/glut.h>
 #endif
 
-#define _USE_MATH_DEFINES // always before the include
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <string>
 #include <vector>
@@ -458,7 +458,7 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 			}
 
 			// Parse model description attribute
-			const XMLAttribute* desc_attribute = model_element->FindAttribute("description");			
+			const XMLAttribute* desc_attribute = model_element->FindAttribute("description");
 			if (desc_attribute)
 				object_description = desc_attribute->Value();
 			else

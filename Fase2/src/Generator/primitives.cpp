@@ -1,11 +1,9 @@
-#define _USE_MATH_DEFINES // always before the include
-
+#define _USE_MATH_DEFINES 
 #include <math.h>
 #include <vector>
 #include <string.h>
 
 #include "primitives.h"
-#include "../utils/ponto.h"
 
 using namespace std;
 
