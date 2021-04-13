@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../utils/ponto.h"
+#include "utils/ponto.h"
 
 using namespace std;
 

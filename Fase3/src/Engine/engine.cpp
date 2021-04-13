@@ -14,12 +14,11 @@
 #include <fstream>
 #include <sstream>
 
-#include "../utils/ponto.h"
-#include "../utils/model.h"
-#include "utils/tinyxml2.h"
+#include "utils/model.h"
 #include "utils/group.h"
 #include "utils/fpsCamera.h"
 #include "utils/staticCamera.h"
+#include "../lib/tinyxml2.h"
 
 #define _3DFILESFOLDER "../../files3D/"
 #define XMLFILESFOLDER "../../filesXML/"
@@ -42,7 +41,7 @@ GLenum gl_face = GL_FRONT_AND_BACK;
 fpsCamera* fps_camera;
 staticCamera* static_camera;
 int camera_mode = 0; // 0 -> static   1 -> fps
-int draw_axis = 1;
+int draw_axis = 0;
 
 // FPS counter variables
 int timebase;
@@ -295,10 +294,13 @@ Model load3dFile(string _3dFile) {
 	if (file.is_open()) {
 		for (int j = 0; j < nr_points; j++) {
 			getline(file, line);
-			Ponto p = Ponto(line);
-			points.push_back(p.getX());
-			points.push_back(p.getY());
-			points.push_back(p.getZ());
+    		
+			string token;
+    		istringstream tokenStream(line);
+
+    		while (getline(tokenStream, token, ',')) {
+				points.push_back(atof(token.c_str()));
+			}
 		}
 		file.close();
 	}

@@ -10,8 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "../../utils/ponto.h"
-#include "../../utils/model.h"
+#include "model.h"
 
 using namespace std;
 

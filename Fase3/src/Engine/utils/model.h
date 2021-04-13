@@ -7,8 +7,6 @@
 #include <GL/glut.h>
 #endif
 
-#include "ponto.h"
-
 using namespace std;
 
 class Model {

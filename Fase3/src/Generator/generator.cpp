@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "../utils/ponto.h"
+#include "utils/ponto.h"
 #include "primitives.h"
 
 using namespace std;
