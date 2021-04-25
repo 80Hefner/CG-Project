@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "utils/ponto.h"
+#include "../utils/ponto.h"
 #include "primitives.h"
 #include "../lib/Matrix.tpp"
 

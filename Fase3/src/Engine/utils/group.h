@@ -9,8 +9,11 @@
 
 #include <string>
 #include <vector>
+#include <cmath>
 
 #include "model.h"
+#include "../../utils/ponto.h"
+#include "../../lib/Matrix.tpp"
 
 using namespace std;
 
@@ -32,6 +35,26 @@ class Translate : public Transformation {
             this->y = y;
             this->z = z;
         };
+};
+
+class DynamicTranslate : public Transformation {
+    private:
+        float total_time;  // time to run the whole curve
+        float segment_time;  // time to run each segment
+        float timebase;  // last time measured
+        float elapsed_time;  // time elapsed since beginning of the curve
+        vector<Ponto> points;
+    public:
+        void applyTransformations();
+
+        DynamicTranslate();
+        DynamicTranslate(float total_time, vector<Ponto> points) {
+            this->total_time = total_time;
+            this->segment_time = this->total_time / (points.size() - 3);
+            this->timebase = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+            this->elapsed_time = 0.0;
+            this->points = points;
+        };    
 };
 
 class Rotate : public Transformation {
@@ -94,6 +117,7 @@ class Group {
     public:
         Group();
         void addTranslate(float x, float y, float z);
+        void addDynamicTranslate(float time, vector<Ponto> points);
         void addRotate(float angle, float axisX, float axisY, float axisZ);
         void addScale(float x, float y, float z);
         vector<Transformation*> getTransformations();

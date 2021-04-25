@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name - Generator
 PROJECT(generator)
 add_executable(${PROJECT_NAME} Generator/generator.cpp
-								Generator/utils/ponto.cpp
-								Generator/primitives.cpp)
+								Generator/primitives.cpp
+								utils/ponto.cpp)
 
 # Project Name - Engine
 PROJECT(engine)
@@ -12,7 +12,9 @@ add_executable(${PROJECT_NAME} Engine/engine.cpp
 								Engine/utils/group.cpp
 								Engine/utils/fpsCamera.cpp
 								Engine/utils/staticCamera.cpp
-								lib/tinyxml2.cpp)
+								Engine/utils/parser.cpp
+								lib/tinyxml2.cpp
+								utils/ponto.cpp)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
