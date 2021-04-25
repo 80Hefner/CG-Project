@@ -239,6 +239,7 @@ void drawGroup(Group g) {
 
 		DynamicTranslate* t_dt = dynamic_cast<DynamicTranslate*>(t);
 		if (t_dt) {
+			t_dt->renderCatmullRomCurve();
 			t_dt->applyTransformations();
 			continue;
 		}

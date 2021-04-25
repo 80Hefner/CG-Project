@@ -15,6 +15,8 @@
 #include "../../utils/ponto.h"
 #include "../../lib/Matrix.tpp"
 
+#define CATMULL_TESSELATION 0.1
+
 using namespace std;
 
 class Transformation {
@@ -44,17 +46,15 @@ class DynamicTranslate : public Transformation {
         float timebase;  // last time measured
         float elapsed_time;  // time elapsed since beginning of the curve
         vector<Ponto> points;
+        vector<Ponto> render_points;
+
+        void generateRenderPoints();
     public:
         void applyTransformations();
+        void renderCatmullRomCurve();
 
         DynamicTranslate();
-        DynamicTranslate(float total_time, vector<Ponto> points) {
-            this->total_time = total_time;
-            this->segment_time = this->total_time / (points.size() - 3);
-            this->timebase = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-            this->elapsed_time = 0.0;
-            this->points = points;
-        };    
+        DynamicTranslate(float total_time, vector<Ponto> points);    
 };
 
 class Rotate : public Transformation {

@@ -6,22 +6,8 @@ using namespace std;
 
 // * Dynamic Translate * //
 
-void DynamicTranslate::applyTransformations() {
-    // Calculate passage of time
-    float current_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    elapsed_time = current_time - timebase;
-
-    if (elapsed_time > total_time) elapsed_time = total_time; // TODO: melhorar isto
-
-    float t = fmod(elapsed_time, segment_time) / segment_time;
-
-    // Calculate transformations
-    int segment = elapsed_time / segment_time;
-    Ponto p0 = points[segment];
-    Ponto p1 = points[segment+1];
-    Ponto p2 = points[segment+2];
-    Ponto p3 = points[segment+3];
-
+// Given a t from a segment an its 4 points, returns the corresponding points in the curve
+Ponto getCatmullRomPoint(float t, Ponto p0, Ponto p1, Ponto p2, Ponto p3) {
     // Generate matrices
     Matrix<float> m_t = {{t*t*t, t*t, t, 1.0f}};
 
@@ -45,17 +31,78 @@ void DynamicTranslate::applyTransformations() {
                           {p2.getZ()},
                           {p3.getZ()}};
 
-    float x_trans = (m_t * m * m_px)[0][0];
-    float y_trans = (m_t * m * m_py)[0][0];
-    float z_trans = (m_t * m * m_pz)[0][0];
+    // Calculate curve point
+    float x_pos = (m_t * m * m_px)[0][0];
+    float y_pos = (m_t * m * m_py)[0][0];
+    float z_pos = (m_t * m * m_pz)[0][0];
 
+    return Ponto(x_pos, y_pos, z_pos);
+}
+
+void DynamicTranslate::generateRenderPoints() {
+    int segment_count = points.size() - 3;
+
+    for (int i = 0; i < segment_count; i++) {
+        Ponto p0 = points[i];
+        Ponto p1 = points[i+1];
+        Ponto p2 = points[i+2];
+        Ponto p3 = points[i+3];
+
+        for (float t = 0; t < 1.0; t += CATMULL_TESSELATION) {
+            Ponto curve_point = getCatmullRomPoint(t, p0, p1, p2, p3);
+            render_points.push_back(curve_point);
+        }
+    }
+
+}
+
+DynamicTranslate::DynamicTranslate(float total_time, vector<Ponto> points) {
+    this->total_time = total_time;
+    this->segment_time = this->total_time / (points.size() - 3);
+    this->timebase = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    this->elapsed_time = 0.0;
+    this->points = points;
+    
+    generateRenderPoints();  // iniciates render_points with the points to render the curve
+}
+
+void DynamicTranslate::applyTransformations() {
+    // Calculate passage of time
+    float current_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    elapsed_time = current_time - timebase;
+
+    if (elapsed_time > total_time) elapsed_time = total_time; // TODO: melhorar isto
+
+    float t = fmod(elapsed_time, segment_time) / segment_time;
+
+    // Calculate transformations
+    int segment = elapsed_time / segment_time;
+    Ponto p0 = points[segment];
+    Ponto p1 = points[segment+1];
+    Ponto p2 = points[segment+2];
+    Ponto p3 = points[segment+3];
+
+    Ponto curve_point = getCatmullRomPoint(t, p0, p1, p2, p3);
+    
     // Apply transformations
-    glTranslatef(x_trans, y_trans, z_trans);
+    // position teapot along the curve
+    glTranslatef(curve_point.getX(), curve_point.getY(), curve_point.getZ());
+
+    // align teapot with the curve
+
 
     if (elapsed_time == total_time) {
         elapsed_time = 0;
         timebase = current_time;
     }
+}
+
+void DynamicTranslate::renderCatmullRomCurve() {
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBegin(GL_LINE_LOOP);
+    //for (int i = 1; i < points.size()-2; i++) glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
+    for (Ponto p : render_points) glVertex3f(p.getX(), p.getY(), p.getZ());
+    glEnd();
 }
 
 // * Group * //
