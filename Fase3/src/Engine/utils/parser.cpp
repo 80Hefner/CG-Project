@@ -52,17 +52,49 @@ void parseXMLTranslateElement (XMLElement* translate_element, Group* new_group) 
 			float time = atof(time_attribute->Value());
 			vector<Ponto> points = {};
 
-			XMLElement* point_element = translate_element->FirstChildElement("point");
+			const XMLAttribute* closed_attribute = translate_element->FindAttribute("closed");
+			string closed = closed_attribute->Value();
 
-			while (point_element) {
-				float x_value = atof(point_element->FindAttribute("X")->Value());
-				float y_value = atof(point_element->FindAttribute("Y")->Value());
-				float z_value = atof(point_element->FindAttribute("Z")->Value());
+			// The points describe a closed line, so we need to duplicate some of them
+			if (closed.compare("true") == 0) {
+				vector<Ponto> temp_points;
 
-				points.push_back( Ponto(x_value, y_value, z_value) );
+				XMLElement* point_element = translate_element->FirstChildElement("point");
 
-				point_element = point_element->NextSiblingElement("point");
+				while (point_element) {
+					float x_value = atof(point_element->FindAttribute("X")->Value());
+					float y_value = atof(point_element->FindAttribute("Y")->Value());
+					float z_value = atof(point_element->FindAttribute("Z")->Value());
+
+					temp_points.push_back( Ponto(x_value, y_value, z_value) );
+
+					point_element = point_element->NextSiblingElement("point");
+				}
+
+				// Duplicate some points so we get a closed curve
+				points.push_back(temp_points.back());
+				for (int i = 0; i < temp_points.size(); i++)
+					points.push_back(temp_points[i]);
+				points.push_back(temp_points[0]);
+				points.push_back(temp_points[1]);
 			}
+
+			// The points can describe a closed line, but none are duplicated and all are interpretated
+			// as part of a Catmull-Rom cubic curve
+			else {
+				XMLElement* point_element = translate_element->FirstChildElement("point");
+
+				while (point_element) {
+					float x_value = atof(point_element->FindAttribute("X")->Value());
+					float y_value = atof(point_element->FindAttribute("Y")->Value());
+					float z_value = atof(point_element->FindAttribute("Z")->Value());
+
+					points.push_back( Ponto(x_value, y_value, z_value) );
+
+					point_element = point_element->NextSiblingElement("point");
+				}
+			}
+			
 
 			new_group->addDynamicTranslate(time, points);
 		}
