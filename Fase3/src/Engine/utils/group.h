@@ -74,6 +74,18 @@ class Rotate : public Transformation {
         };
 };
 
+class DynamicRotate : public Transformation {
+    private:
+        float total_time;  // time to perform 360 degrees rotation
+        float timebase;  // time at the start of the rotation
+        float axisX, axisY, axisZ;  // axis of rotation
+    public:
+        void applyTransformation();
+
+        DynamicRotate();
+        DynamicRotate(float total_time, float axisX, float axisY, float axisZ);    
+};
+
 class Scale : public Transformation {
     private:
         float x, y, z;
@@ -119,6 +131,7 @@ class Group {
         void addTranslate(float x, float y, float z);
         void addDynamicTranslate(float time, vector<Ponto> points);
         void addRotate(float angle, float axisX, float axisY, float axisZ);
+        void addDynamicRotate(float time, float axisX, float axisY, float axisZ);
         void addScale(float x, float y, float z);
         vector<Transformation*> getTransformations();
 

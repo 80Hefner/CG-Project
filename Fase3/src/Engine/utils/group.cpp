@@ -105,6 +105,27 @@ void DynamicTranslate::renderCatmullRomCurve() {
     glEnd();
 }
 
+// * Dynamic Rotate * //
+
+DynamicRotate::DynamicRotate(float total_time, float axisX, float axisY, float axisZ) {
+    this->total_time = total_time;
+    this->timebase = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    this->axisX = axisX;
+    this->axisY = axisY;
+    this->axisZ = axisZ;
+}
+
+void DynamicRotate::applyTransformation() {
+    // Get the time elapsed since the beginning of this full rotation
+    float elapsed_time = fmod(glutGet(GLUT_ELAPSED_TIME)/1000.0 - timebase, total_time);
+
+    // Get the current angle of the object
+    float angle = 360 * elapsed_time / total_time;
+
+    // Apply the rotation
+    glRotatef(angle, axisX, axisY, axisZ);
+}
+
 // * Group * //
 
 Group::Group() {
@@ -127,6 +148,11 @@ void Group::addDynamicTranslate(float time, vector<Ponto> points) {
 void Group::addRotate(float angle, float axisX, float axisY, float axisZ) {
     Rotate* rt = new Rotate(angle,axisX,axisY,axisZ);
     this->transformations.push_back(rt);
+}
+
+void Group::addDynamicRotate(float time, float axisX, float axisY, float axisZ) {
+    DynamicRotate* drt = new DynamicRotate(time, axisX, axisY, axisZ);
+    this->transformations.push_back(drt);
 }
 
 void Group::addScale(float x, float y, float z) {

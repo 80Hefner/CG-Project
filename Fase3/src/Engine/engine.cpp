@@ -250,6 +250,12 @@ void drawGroup(Group g) {
 			continue;
 		}
 
+		DynamicRotate* t_dr = dynamic_cast<DynamicRotate*>(t);
+		if (t_dr) {
+			t_dr->applyTransformation();
+			continue;
+		}
+
 		Scale* t_s = dynamic_cast<Scale*>(t);
 		if (t_s) {
 			glScalef(t_s->getX(), t_s->getY(), t_s->getZ());
@@ -257,7 +263,7 @@ void drawGroup(Group g) {
 		}
 	}
 
-	// Trying to get scales from group
+	// Trying to get color from group
 	Color* cl = g.getColor();
 	glColor3f(cl->getR(), cl->getG(), cl->getB());
 
