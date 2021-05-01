@@ -39,7 +39,6 @@ Model load3dFile(string _3dFile) {
 }
 
 
-
 // Function to parse a translate element inside a group element
 void parseXMLTranslateElement (XMLElement* translate_element, Group* new_group) {
 	// Trying to get time attribute, so we know if it's a static or dynamic translation
