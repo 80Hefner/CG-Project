@@ -15,7 +15,7 @@
 #include "../../utils/ponto.h"
 #include "../../lib/Matrix.tpp"
 
-#define CATMULL_TESSELATION 0.1
+#define CATMULL_TESSELATION 0.01
 
 using namespace std;
 

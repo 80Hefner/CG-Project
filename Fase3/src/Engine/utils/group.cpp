@@ -158,10 +158,8 @@ void DynamicTranslate::applyTransformations() {
     // position teapot along the curve
     glTranslatef(curve_point.getX(), curve_point.getY(), curve_point.getZ());
 
-    // align the teapot with the curve
-    glMultMatrixf((float*) m);
-
     // align teapot with the curve
+    glMultMatrixf((float*) m);
 
 
     if (elapsed_time == total_time) {

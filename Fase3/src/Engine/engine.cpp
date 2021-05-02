@@ -39,7 +39,7 @@ GLenum gl_face = GL_FRONT_AND_BACK;
 fpsCamera* fps_camera;
 staticCamera* static_camera;
 int camera_mode = 0; // 0 -> static   1 -> fps
-int draw_axis = 1;
+int draw_axis = 0;
 
 // FPS counter variables
 int timebase;
