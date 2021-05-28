@@ -1,0 +1,10 @@
+<scene>
+    <group>
+        <rotate time="10" axisY="1" />
+        <translate X="-9.959" Y="0" Z="5.75" />
+        <rotate time="10" axisY="-1" />
+        <models>
+            <model file="teapot.3d" />
+        </models>
+    </group>
+</scene>
