@@ -7,7 +7,7 @@
     <group> <!-- Sun -->
         <scale  X="4.5" Y="4.5" Z="4.5" />
         <models>
-            <model file="sphere.3d" description="Sun" diffR="0.973" diffG="0.878" diffB="0" />
+            <model file="sphere.3d" emisR="1.0" emisG="1.0" emisB="1.0" />
         </models>
     </group>
 

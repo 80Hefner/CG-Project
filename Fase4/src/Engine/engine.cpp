@@ -295,20 +295,11 @@ void drawGroup(Group g) {
 // Function to draw a single model
 void drawModel(Model m) {
 
-	// Set emission values for Sun
-	if (m.getDescription().compare("Sun") == 0) {
-		float r[4] = {1.0, 1.0, 1.0, 1.0};
-		glMaterialfv(GL_FRONT, GL_EMISSION, r);
-	}
-	else {
-		float r[4] = {0.0, 0.0, 0.0, 1.0};
-		glMaterialfv(GL_FRONT, GL_EMISSION, r);
-	}
-
 	// Set model material properties
 	glMaterialfv(GL_FRONT, GL_AMBIENT, m.getAmbient());
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, m.getDiffuse());
 	glMaterialfv(GL_FRONT, GL_SPECULAR, m.getSpecular());
+	glMaterialfv(GL_FRONT, GL_EMISSION, m.getEmissive());
 	glMaterialf(GL_FRONT, GL_SHININESS, m.getShininess());
 
 	// Bind points VBO
@@ -402,6 +393,7 @@ int main(int argc, char **argv) {
 		// OpenGL settings
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
+		glEnable(GL_NORMALIZE);
 		glEnable(GL_LIGHTING);
 		// Enable lights parsed in XML file
 		for (int i = 0; i < lights_vector.size(); i++)

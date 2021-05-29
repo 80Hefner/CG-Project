@@ -271,28 +271,82 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 				string file = file_attribute->Value();
 				model = load3dFile(_3DFILESFOLDER + file);
 
-				// Get description attribute
-				const XMLAttribute* desc_attribute = model_element->FindAttribute("description");
-				string description;
-				desc_attribute ? description = desc_attribute->Value() : description = "";
+				const XMLAttribute* aux_attribute;
 
+				// Get description attribute
+				aux_attribute = model_element->FindAttribute("description");
+				string description;
+				aux_attribute ? description = aux_attribute->Value() : description = "";
+
+				// Get diffuse parameters
 				// Get r_diffuse attribute
-				const XMLAttribute* r_attribute = model_element->FindAttribute("diffR");
+				aux_attribute = model_element->FindAttribute("diffR");
 				float r_diffuse;
-				r_attribute ? r_diffuse = atof(r_attribute->Value()) : r_diffuse = 1.0;
+				aux_attribute ? r_diffuse = atof(aux_attribute->Value()) : r_diffuse = 0.8;
 
 				// Get g_diffuse attribute
-				const XMLAttribute* g_attribute = model_element->FindAttribute("diffG");
+				aux_attribute = model_element->FindAttribute("diffG");
 				float g_diffuse;
-				g_attribute ? g_diffuse = atof(g_attribute->Value()) : g_diffuse = 1.0;
+				aux_attribute ? g_diffuse = atof(aux_attribute->Value()) : g_diffuse = 0.8;
 
 				// Get b_diffuse attribute
-				const XMLAttribute* b_attribute = model_element->FindAttribute("diffB");
+				aux_attribute = model_element->FindAttribute("diffB");
 				float b_diffuse;
-				b_attribute ? b_diffuse = atof(b_attribute->Value()) : b_diffuse = 1.0;
-				
+				aux_attribute ? b_diffuse = atof(aux_attribute->Value()) : b_diffuse = 0.8;
+
+				// Get specular parameters
+				// Get r_specular attribute
+				aux_attribute = model_element->FindAttribute("specR");
+				float r_specular;
+				aux_attribute ? r_specular = atof(aux_attribute->Value()) : r_specular = 0.0;
+
+				// Get g_specular attribute
+				aux_attribute = model_element->FindAttribute("specG");
+				float g_specular;
+				aux_attribute ? g_specular = atof(aux_attribute->Value()) : g_specular = 0.0;
+
+				// Get b_specular attribute
+				aux_attribute = model_element->FindAttribute("specB");
+				float b_specular;
+				aux_attribute ? b_specular = atof(aux_attribute->Value()) : b_specular = 0.0;
+
+				// Get emissive parameters
+				// Get r_emissive attribute
+				aux_attribute = model_element->FindAttribute("emisR");
+				float r_emissive;
+				aux_attribute ? r_emissive = atof(aux_attribute->Value()) : r_emissive = 0.0;
+
+				// Get g_emissive attribute
+				aux_attribute = model_element->FindAttribute("emisG");
+				float g_emissive;
+				aux_attribute ? g_emissive = atof(aux_attribute->Value()) : g_emissive = 0.0;
+
+				// Get b_emissive attribute
+				aux_attribute = model_element->FindAttribute("emisB");
+				float b_emissive;
+				aux_attribute ? b_emissive = atof(aux_attribute->Value()) : b_emissive = 0.0;
+
+				// Get ambient parameters
+				// Get r_ambient attribute
+				aux_attribute = model_element->FindAttribute("ambiR");
+				float r_ambient;
+				aux_attribute ? r_ambient = atof(aux_attribute->Value()) : r_ambient = 0.2;
+
+				// Get g_ambient attribute
+				aux_attribute = model_element->FindAttribute("ambiG");
+				float g_ambient;
+				aux_attribute ? g_ambient = atof(aux_attribute->Value()) : g_ambient = 0.2;
+
+				// Get b_ambient attribute
+				aux_attribute = model_element->FindAttribute("ambiB");
+				float b_ambient;
+				aux_attribute ? b_ambient = atof(aux_attribute->Value()) : b_ambient = 0.2;
+
 				model.setDescription(description);
 				model.setDiffuse(r_diffuse, g_diffuse, b_diffuse, 1.0);
+				model.setSpecular(r_specular, g_specular, b_specular, 1.0);
+				model.setEmissive(r_emissive, g_emissive, b_emissive, 1.0);
+				model.setAmbient(r_ambient, g_ambient, b_ambient, 1.0);
 				
 				new_group.addModel(model);
 			}

@@ -9,9 +9,6 @@
 
 #include "../../utils/float_vector.h"
 
-#define AMBIENT_MULTIPLIER 0.4
-#define SPECULAR_MULTIPLIER 0
-
 using namespace std;
 
 class Model {
@@ -23,6 +20,7 @@ class Model {
         GLfloat ambient[4];
         GLfloat specular[4];
         GLfloat diffuse[4];
+        GLfloat emissive[4];
         GLfloat shininess = 0.0;
     public:
         Model() {
@@ -37,14 +35,32 @@ class Model {
             this->vertice_count = vertice_count;
         };
 
+        void setAmbient(GLfloat r_ambient, GLfloat g_ambient, GLfloat b_ambient, GLfloat a_ambient) {
+            this->ambient[0] = r_ambient;
+            this->ambient[1] = g_ambient;
+            this->ambient[2] = b_ambient;
+            this->ambient[3] = a_ambient;
+        };
+
+        void setSpecular(GLfloat r_specular, GLfloat g_specular, GLfloat b_specular, GLfloat a_specular) {
+            this->specular[0] = r_specular;
+            this->specular[1] = g_specular;
+            this->specular[2] = b_specular;
+            this->specular[3] = a_specular;
+        };
+
         void setDiffuse(GLfloat r_diffuse, GLfloat g_diffuse, GLfloat b_diffuse, GLfloat a_diffuse) {
             this->diffuse[0] = r_diffuse;
             this->diffuse[1] = g_diffuse;
             this->diffuse[2] = b_diffuse;
             this->diffuse[3] = a_diffuse;
+        };
 
-            vector_mul_value(this->diffuse, AMBIENT_MULTIPLIER, this->ambient);
-            vector_mul_value(this->diffuse, SPECULAR_MULTIPLIER, this->specular);
+        void setEmissive(GLfloat r_emissive, GLfloat g_emissive, GLfloat b_emissive, GLfloat a_emissive) {
+            this->emissive[0] = r_emissive;
+            this->emissive[1] = g_emissive;
+            this->emissive[2] = b_emissive;
+            this->emissive[3] = a_emissive;
         };
 
         void setDescription(string description) {
@@ -60,6 +76,7 @@ class Model {
         GLfloat* getDiffuse() {return this->diffuse;};
         GLfloat* getAmbient() {return this->ambient;};
         GLfloat* getSpecular() {return this->specular;};
+        GLfloat* getEmissive() {return this->emissive;};
         GLfloat getShininess() {return this->shininess;};
 };
 
