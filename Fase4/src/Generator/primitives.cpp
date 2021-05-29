@@ -301,24 +301,24 @@ void torus(float innerRadius, float outerRadius, int slices, int stacks, vector<
 
 			// Adds the points of the two triangles associated to this slice and stack
 			points.push_back(p1);
-			points.push_back(p2);
 			points.push_back(p3);
+			points.push_back(p2);
 
 			points.push_back(p1);
-			points.push_back(p3);
 			points.push_back(p4);
+			points.push_back(p3);
 
 			// Adds the normals of the two triangles associated to this slice and stack
 			Ponto c_p1 = generateTorusCenterPoint(alpha, outerRadius);
 			Ponto c_p2 = generateTorusCenterPoint(alpha2, outerRadius);
 
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p1, c_p1)));
-			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p2, c_p1)));
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p2, c_p1)));
 			
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p1, c_p1)));
-			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p4, c_p2)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
 		}
 	}
 
