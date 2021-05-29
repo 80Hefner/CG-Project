@@ -25,6 +25,6 @@
 using namespace tinyxml2;
 using namespace std;
 
-int loadXMLFile(string xmlFileString, vector<Group>* groups_vector, vector<Light>* lights_vector);
+int loadXMLFile(string xmlFileString, vector<Group>* groups_vector, vector<Light*>* lights_vector);
 
 #endif //PARSER_H

@@ -32,7 +32,7 @@ using namespace std;
 vector<Group> groups_vector = {};
 
 // Vector with all lights
-vector<Light> lights_vector = {};
+vector<Light*> lights_vector = {};
 
 // Presentation options
 GLenum gl_mode = GL_FILL;
@@ -122,8 +122,8 @@ void renderScene(void) {
 	}
 
 	// Set lights
-	for (Light l : lights_vector) {
-		l.apply();
+	for (Light* l : lights_vector) {
+		l->apply();
 	}
 	
 	// put drawing instructions here
