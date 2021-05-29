@@ -22,7 +22,7 @@ void writePointsToFile(vector<Ponto> points, vector<Ponto>* normals, string file
     file.open(fileString, ios::out | ios::trunc);
     file << points.size() << "\n";
 
-    // Write 0 or 1 indicating if there's normals associated with the points
+    // Write true or false indicating if there's normals associated with the points
     normals ? file << "true\n" : file << "false\n";
 
     for(Ponto p : points) {

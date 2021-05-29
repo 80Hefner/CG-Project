@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME} Engine/engine.cpp
 								Engine/utils/fpsCamera.cpp
 								Engine/utils/staticCamera.cpp
 								Engine/utils/parser.cpp
+								Engine/utils/lights.cpp
 								lib/tinyxml2.cpp
 								utils/ponto.cpp
 								utils/float_vector.cpp)

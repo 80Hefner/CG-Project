@@ -260,11 +260,16 @@ void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Po
 }
 
 
-// Torus auxiliary function
+// Torus auxiliary function to generate a point in the surface
 Ponto generateTorusPoint(float innerRadius, float outerRadius , float alpha, float beta) {
 	return Ponto(cos(alpha) * (innerRadius * sin(beta) + outerRadius),
 					cos(beta) * innerRadius,
 					sin(alpha) * (innerRadius * sin(beta) + outerRadius));
+}
+
+// Torus auxiliary function to generate a point in the middle of its interior
+Ponto generateTorusCenterPoint(float alpha, float outerRadius) {
+	return Ponto(cos(alpha) * outerRadius, 0.0, sin(alpha) * outerRadius);
 }
 
 // Creates a torus centered on origin
@@ -304,13 +309,16 @@ void torus(float innerRadius, float outerRadius, int slices, int stacks, vector<
 			points.push_back(p4);
 
 			// Adds the normals of the two triangles associated to this slice and stack
-			calculate_normal(p1, p2, p3);
-			calculate_normal(p2, p3, p1);
-			calculate_normal(p3, p1, p2);
+			Ponto c_p1 = generateTorusCenterPoint(alpha, outerRadius);
+			Ponto c_p2 = generateTorusCenterPoint(alpha2, outerRadius);
 
-			calculate_normal(p1, p3, p4);
-			calculate_normal(p3, p4, p1);
-			calculate_normal(p4, p1, p3);
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p1, c_p1)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p2, c_p1)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
+			
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p1, c_p1)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p4, c_p2)));
 		}
 	}
 

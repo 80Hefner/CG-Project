@@ -270,9 +270,32 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 			if (file_attribute) {
 				string file = file_attribute->Value();
 				model = load3dFile(_3DFILESFOLDER + file);
-			}
 
-			new_group.addModel(model);
+				// Get description attribute
+				const XMLAttribute* desc_attribute = model_element->FindAttribute("description");
+				string description;
+				desc_attribute ? description = desc_attribute->Value() : description = "";
+
+				// Get r_diffuse attribute
+				const XMLAttribute* r_attribute = model_element->FindAttribute("diffR");
+				float r_diffuse;
+				r_attribute ? r_diffuse = atof(r_attribute->Value()) : r_diffuse = 1.0;
+
+				// Get g_diffuse attribute
+				const XMLAttribute* g_attribute = model_element->FindAttribute("diffG");
+				float g_diffuse;
+				g_attribute ? g_diffuse = atof(g_attribute->Value()) : g_diffuse = 1.0;
+
+				// Get b_diffuse attribute
+				const XMLAttribute* b_attribute = model_element->FindAttribute("diffB");
+				float b_diffuse;
+				b_attribute ? b_diffuse = atof(b_attribute->Value()) : b_diffuse = 1.0;
+				
+				model.setDescription(description);
+				model.setDiffuse(r_diffuse, g_diffuse, b_diffuse, 1.0);
+				
+				new_group.addModel(model);
+			}
 
 			model_element = model_element->NextSiblingElement("models");
 		}
@@ -290,9 +313,37 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 	return new_group;
 }
 
+// Function to parse a group element in a xml file
+Light parseXMLLightElement (XMLElement* light_element, int light_ind) {
+	Light new_light = Light();
+
+	const XMLAttribute* type_attribute = light_element->FindAttribute("type");
+	const char* light_type = type_attribute->Value();
+
+	if (strcmp(light_type, "POINT") == 0) {
+		const XMLAttribute* x_attribute = light_element->FindAttribute("posX");
+		float posX;
+		x_attribute ? posX = atof(x_attribute->Value()) : posX = 0;
+
+		const XMLAttribute* y_attribute = light_element->FindAttribute("posY");
+		float posY;
+		y_attribute ? posY = atof(y_attribute->Value()) : posY = 0;
+
+		const XMLAttribute* z_attribute = light_element->FindAttribute("posZ");
+		float posZ;
+		z_attribute ? posZ = atof(z_attribute->Value()) : posZ = 0;
+
+		new_light.setIndex(light_ind);
+		new_light.setType(LIGHT_POINT);
+		new_light.setPos(new Ponto(posX, posY, posZ));
+	}
+	//TODO: FAAZER PARA OUTROS TIPOS DE LUZ
+
+	return new_light;
+}
 
 // Function to parse a xml file
-int loadXMLFile(string xmlFileString, vector<Group>* groups_vector) {
+int loadXMLFile(string xmlFileString, vector<Group>* groups_vector, vector<Light>* lights_vector) {
 	XMLDocument doc;
 	vector<string> _3dFilesList;
 
@@ -308,6 +359,24 @@ int loadXMLFile(string xmlFileString, vector<Group>* groups_vector) {
 	if (root == nullptr) {
 		std::cout << "XML File has wrong sintax! -> scene element\n";
 		return 0;
+	}
+
+	// Trying to get lights element
+	XMLElement* lights_element = root->FirstChildElement("lights");
+	if (lights_element) {
+		int light_ind = 0;
+		
+		XMLElement* light_element = lights_element->FirstChildElement("light");
+		while (light_element) {
+			Light l = parseXMLLightElement(light_element, light_ind);
+			lights_vector->push_back(l);
+
+			light_element = light_element->NextSiblingElement("light");
+			light_ind++;
+		}
+
+		Group g = parseXMLGroupElement(lights_element);
+		groups_vector->push_back(g);
 	}
 
 	// Trying to get all group elements

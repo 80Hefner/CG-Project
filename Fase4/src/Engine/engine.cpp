@@ -31,15 +31,18 @@ using namespace std;
 // Vector with all objects
 vector<Group> groups_vector = {};
 
+// Vector with all lights
+vector<Light> lights_vector = {};
+
 // Presentation options
-GLenum gl_mode = GL_LINE;
+GLenum gl_mode = GL_FILL;
 GLenum gl_face = GL_FRONT_AND_BACK;
 
 // Camera values
 fpsCamera* fps_camera;
 staticCamera* static_camera;
 int camera_mode = 0; // 0 -> static   1 -> fps
-int draw_axis = 0;
+int draw_axis = 1;
 
 // FPS counter variables
 int timebase;
@@ -55,6 +58,7 @@ void processMouseMotion(int xx, int yy);
 void processMouseButtons(int button, int state, int xx, int yy);
 void drawAxis(void);
 void drawGroup(Group g);
+void drawModel(Model m);
 void engineHelpMenu();
 
 
@@ -116,6 +120,11 @@ void renderScene(void) {
 		string title = "CG - FASE 4 (" + to_string((int)fps) + " FPS)";
 		glutSetWindowTitle(title.c_str());
 	}
+
+	// Set lights
+	for (Light l : lights_vector) {
+		l.apply();
+	}
 	
 	// put drawing instructions here
 	// Draw axis
@@ -125,9 +134,6 @@ void renderScene(void) {
     for (Group g : groups_vector) {
 		drawGroup(g);
 	}
-
-	float pos[4] = {1.0, 1.0, 1.0, 0.0};
-	glLightfv(GL_LIGHT0,GL_POSITION, pos);
 
 	// End of frame
 	glutSwapBuffers();
@@ -273,23 +279,8 @@ void drawGroup(Group g) {
 	// Drawing models in this group
 	vector<Model> models = g.getModels();
 	for (Model model : models) {
-		// Bind points VBO
-		glBindBuffer(GL_ARRAY_BUFFER, model.getPVBOInd());
-		glVertexPointer(3, GL_FLOAT, 0, 0);
-
-		// If defined, bind normals VBO
-		GLuint n_vbo_ind = model.getNVBOInd();
-		if (n_vbo_ind != 0) {
-			glBindBuffer(GL_ARRAY_BUFFER, n_vbo_ind);
-			glNormalPointer(GL_FLOAT, 0, 0);
-		}
-
-		glDrawArrays(GL_TRIANGLES, 0, model.getVerticeCount());
+		drawModel(model);
 	}
-
-	float dark[] = { 0.2, 0.2, 0.2, 1.0 };
-	float white[] = { 0.8, 0.8, 0.8, 1.0 };
-	float red[] = { 0.8, 0.2, 0.2, 1.0 };
 
 	// Drawing groups in this group
 	vector<Group> groups = g.getGroups();
@@ -301,6 +292,38 @@ void drawGroup(Group g) {
 	glPopMatrix();
 }
 
+// Function to draw a single model
+void drawModel(Model m) {
+
+	// Set emission values for Sun
+	if (m.getDescription().compare("Sun") == 0) {
+		float r[4] = {1.0, 1.0, 1.0, 1.0};
+		glMaterialfv(GL_FRONT, GL_EMISSION, r);
+	}
+	else {
+		float r[4] = {0.0, 0.0, 0.0, 1.0};
+		glMaterialfv(GL_FRONT, GL_EMISSION, r);
+	}
+
+	// Set model material properties
+	glMaterialfv(GL_FRONT, GL_AMBIENT, m.getAmbient());
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, m.getDiffuse());
+	glMaterialfv(GL_FRONT, GL_SPECULAR, m.getSpecular());
+	glMaterialf(GL_FRONT, GL_SHININESS, m.getShininess());
+
+	// Bind points VBO
+	glBindBuffer(GL_ARRAY_BUFFER, m.getPVBOInd());
+	glVertexPointer(3, GL_FLOAT, 0, 0);
+
+	// If defined, bind normals VBO
+	GLuint n_vbo_ind = m.getNVBOInd();
+	if (n_vbo_ind != 0) {
+		glBindBuffer(GL_ARRAY_BUFFER, n_vbo_ind);
+		glNormalPointer(GL_FLOAT, 0, 0);
+	}
+
+	glDrawArrays(GL_TRIANGLES, 0, m.getVerticeCount());
+}
 
 // * Print Functions * //
 
@@ -353,16 +376,6 @@ int main(int argc, char **argv) {
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 
-		// TODO: ISTOOO
-		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-		GLfloat dark[4] = {0.2, 0.2, 0.2, 1.0};
-		GLfloat white[4] = {1.0, 1.0, 1.0, 1.0};
-		// light colors
-		glLightfv(GL_LIGHT0, GL_AMBIENT, dark);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, white);
-
 		// init GLEW
 		#ifndef __APPLE__
 		glewInit();
@@ -378,17 +391,21 @@ int main(int argc, char **argv) {
 		glutMouseFunc(processMouseButtons);
 		glutMotionFunc(processMouseMotion);
 
-		//  OpenGL settings
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-
 		// load XML file
         string xmlFileString = argv[1];
     	xmlFileString = XMLFILESFOLDER + xmlFileString;
-		if (loadXMLFile(xmlFileString, &groups_vector) == 0) {
+		if (loadXMLFile(xmlFileString, &groups_vector, &lights_vector) == 0) {
 			std::cout << "Error reading XML File!\n";
 			return 0;
 		}
+
+		// OpenGL settings
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_LIGHTING);
+		// Enable lights parsed in XML file
+		for (int i = 0; i < lights_vector.size(); i++)
+			glEnable(GL_LIGHT0 + (GLenum) i);
 
 		// init fps camera
 		fps_camera = new fpsCamera(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), FPS_CAMERA_CFG_FILE);

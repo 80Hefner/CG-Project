@@ -17,6 +17,7 @@
 
 #include "model.h"
 #include "group.h"
+#include "lights.h"
 #include "../../lib/tinyxml2.h"
 
 #define _3DFILESFOLDER "../../files3D/"
@@ -24,6 +25,6 @@
 using namespace tinyxml2;
 using namespace std;
 
-int loadXMLFile(string xmlFileString, vector<Group>* groups_vector);
+int loadXMLFile(string xmlFileString, vector<Group>* groups_vector, vector<Light>* lights_vector);
 
 #endif //PARSER_H

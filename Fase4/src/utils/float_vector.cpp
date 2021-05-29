@@ -46,3 +46,9 @@ Ponto vector_sub_ponto(Ponto p1, Ponto p2) {
                  p1.getY() - p2.getY(),
                  p1.getZ() - p2.getZ());
 }
+
+void vector_mul_value(float* a, float x, float* res) {
+    res[0] = x * a[0];
+    res[1] = x * a[1];
+    res[2] = x * a[2];
+}
