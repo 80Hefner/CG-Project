@@ -50,6 +50,12 @@
             <model file="sphere.3d" texture="mercury.jpg" />
         </models>
     </group>
+
+    <group> <!-- Mercury Orbit -->
+        <models>
+            <model file="orbits/mercury_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
+        </models>
+    </group>
     
     <group> <!-- Venus -->
         <rotate time="6.15" axisY="1" />
@@ -58,6 +64,12 @@
         <scale  X="0.55" Y="0.55" Z="0.55" />
         <models>
             <model file="sphere.3d" texture="venus.jpg" />
+        </models>
+    </group>
+
+    <group> <!-- Venus Orbit -->
+        <models>
+            <model file="orbits/venus_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
         </models>
     </group>
 
@@ -80,6 +92,12 @@
         </group>
     </group>
     
+    <group> <!-- Earth Orbit -->
+        <models>
+            <model file="orbits/earth_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
+        </models>
+    </group>
+
     <group> <!-- Mars -->
         <rotate time="18.8" axisY="1" />
         <translate X="-8.75" Y="0" Z="-15.155" />
@@ -90,6 +108,12 @@
         </models>
     </group>
     
+    <group> <!-- Mars Orbit -->
+        <models>
+            <model file="orbits/mars_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
+        </models>
+    </group>
+
     <group> <!-- Asteroid Belt -->
         <rotate time="100" axisY="1" />
         <scale Y="0.1" />
@@ -141,6 +165,12 @@
 
     </group>
 
+    <group> <!-- Jupiter Orbit -->
+        <models>
+            <model file="orbits/jupiter_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
+        </models>
+    </group>
+
     <group> <!-- Saturn -->
         <rotate time="294.6" axisY="1" />
         <translate X="-30" Y="0" Z="51.96" />
@@ -156,6 +186,12 @@
                 <model file="saturn_ring.3d" texture="saturn_ring.png" />
             </models>
         </group>
+    </group>
+
+    <group> <!-- Saturn Orbit -->
+        <models>
+            <model file="orbits/saturn_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
+        </models>
     </group>
 
     <group> <!-- Uranus -->
@@ -175,6 +211,12 @@
         </group>
     </group>
 
+    <group> <!-- Uranus Orbit -->
+        <models>
+            <model file="orbits/uranus_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
+        </models>
+    </group>
+
     <group> <!-- Neptune -->
         <rotate time="1647.9" axisY="1" />
         <translate X="70" Y="0" Z="-121.24" />
@@ -183,6 +225,12 @@
         <scale  X="1.7" Y="1.7" Z="1.7" />
         <models>
             <model file="sphere.3d" texture="neptune.jpg" />
+        </models>
+    </group>
+
+    <group> <!-- Neptune Orbit -->
+        <models>
+            <model file="orbits/neptune_orbit.3d" ambiR="1.0" ambiG="1.0" ambiB="1.0" diffR="0.0" diffG="0.0" diffB="0.0" />
         </models>
     </group>
 
