@@ -447,9 +447,6 @@ int loadXMLFile(string xmlFileString, vector<Group>* groups_vector, vector<Light
 			light_element = light_element->NextSiblingElement("light");
 			light_ind++;
 		}
-
-		Group g = parseXMLGroupElement(lights_element);
-		groups_vector->push_back(g);
 	}
 
 	// Trying to get all group elements

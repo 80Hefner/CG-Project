@@ -365,13 +365,3 @@ void torus(float innerRadius, float outerRadius, int slices, int stacks, vector<
 	*ns = normals;
 	*ts = textures;
 }
-
-// Function that calculates the normal in p1, given two other points, following the right hand rule
-Ponto calculate_normal(Ponto p1, Ponto p2, Ponto p3) {
-	Ponto v1 = vector_sub_ponto(p2, p1);
-	Ponto v2 = vector_sub_ponto(p3, p1);
-
-	Ponto n = vector_cross_ponto(v1, v2);
-
-	return vector_normalize_ponto(n);
-}
