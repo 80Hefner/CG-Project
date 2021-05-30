@@ -373,7 +373,8 @@ Light* parseXMLLightElement (XMLElement* light_element, int light_ind) {
 
 	// Get light type: POINT, DIRECTIONAL or SPOT
 	const XMLAttribute* type_attribute = light_element->FindAttribute("type");
-	const char* light_type = type_attribute->Value();
+	const char* light_type;
+	type_attribute ? light_type = type_attribute->Value() : light_type = "";
 
 	// Get ambient attributes
 	GLfloat* ambient = parseAmbientAttributes(light_element, 0.0);
@@ -442,7 +443,8 @@ int loadXMLFile(string xmlFileString, vector<Group>* groups_vector, vector<Light
 		XMLElement* light_element = lights_element->FirstChildElement("light");
 		while (light_element) {
 			Light* l = parseXMLLightElement(light_element, light_ind);
-			lights_vector->push_back(l);
+			if (l != nullptr)
+				lights_vector->push_back(l);
 
 			light_element = light_element->NextSiblingElement("light");
 			light_ind++;
