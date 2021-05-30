@@ -172,10 +172,11 @@ vector<Ponto> cone(float raioBase, float alturaCone, int nrSlices, int nrStacks)
 }
 
 // Criação de uma esfera com um dado raio, nr slices e de stacks
-void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Ponto>* ns) {
+void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Ponto>* ns, vector<float>* ts) {
 
 	vector<Ponto> pontos;
 	vector<Ponto> normals;
+	vector<float> textures;
 
 	float defaultAngleFatia = (2 * M_PI) / nrSlices;
 	float defaultAngleStack = M_PI / nrStacks;
@@ -203,6 +204,10 @@ void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Po
 		normals.push_back(vector_normalize_ponto(p2));
 		normals.push_back(vector_normalize_ponto(p3));
 
+		textures.push_back( anguloFatia / (2*M_PI) ); textures.push_back( 0.0 );
+		textures.push_back( proxAnguloFatia / (2*M_PI) ); textures.push_back( (proxAnguloStack + M_PI_2) / M_PI );
+		textures.push_back( anguloFatia / (2*M_PI) ); textures.push_back( (proxAnguloStack + M_PI_2) / M_PI );
+
 		anguloStack += defaultAngleStack;
 		proxAnguloStack += defaultAngleStack;
 
@@ -221,6 +226,10 @@ void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Po
 			normals.push_back(vector_normalize_ponto(p2));
 			normals.push_back(vector_normalize_ponto(p3));
 
+			textures.push_back( anguloFatia / (2*M_PI) ); textures.push_back( (anguloStack + M_PI_2) / M_PI );
+			textures.push_back( proxAnguloFatia / (2*M_PI) ); textures.push_back( (anguloStack + M_PI_2) / M_PI );
+			textures.push_back( anguloFatia / (2*M_PI) ); textures.push_back( (proxAnguloStack + M_PI_2) / M_PI );
+			
 			//Triangulo de stacks intermédias que compõe um quadrado
 			p1 = Ponto(raio * cos(anguloStack) * sin(proxAnguloFatia), raio * sin(anguloStack), raio * cos(anguloStack) * cos(proxAnguloFatia));
 			p2 = Ponto(raio * cos(proxAnguloStack) * sin(proxAnguloFatia), raio * sin(proxAnguloStack), raio * cos(proxAnguloStack) * cos(proxAnguloFatia));
@@ -233,6 +242,10 @@ void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Po
 			normals.push_back(vector_normalize_ponto(p1));
 			normals.push_back(vector_normalize_ponto(p2));
 			normals.push_back(vector_normalize_ponto(p3));
+
+			textures.push_back( proxAnguloFatia / (2*M_PI) ); textures.push_back( (anguloStack + M_PI_2) / M_PI );
+			textures.push_back( proxAnguloFatia / (2*M_PI) ); textures.push_back( (proxAnguloStack + M_PI_2) / M_PI );
+			textures.push_back( anguloFatia / (2*M_PI) ); textures.push_back( (proxAnguloStack + M_PI_2) / M_PI );
 
 			anguloStack += defaultAngleStack;
 			proxAnguloStack += defaultAngleStack;
@@ -251,12 +264,17 @@ void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Po
 		normals.push_back(vector_normalize_ponto(p2));
 		normals.push_back(vector_normalize_ponto(p3));
 
+		textures.push_back( anguloFatia / (2*M_PI) ); textures.push_back( 1.0 );
+		textures.push_back( proxAnguloFatia / (2*M_PI) ); textures.push_back( (anguloStack + M_PI_2) / M_PI );
+		textures.push_back( anguloFatia / (2*M_PI) ); textures.push_back( (anguloStack + M_PI_2) / M_PI );
+
 		anguloStack += defaultAngleStack;
 		proxAnguloStack += defaultAngleStack;
 	}
 
 	*ps = pontos;
 	*ns = normals;
+	*ts = textures;
 }
 
 

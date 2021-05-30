@@ -15,7 +15,7 @@
 using namespace std;
 
 
-void writePointsToFile(vector<Ponto> points, vector<Ponto>* normals, string fileString) {
+void writePointsToFile(vector<Ponto> points, vector<Ponto>* normals, vector<float>* textures, string fileString) {
     ofstream file;
 
     // Write number of points to file
@@ -25,6 +25,10 @@ void writePointsToFile(vector<Ponto> points, vector<Ponto>* normals, string file
     // Write true or false indicating if there's normals associated with the points
     normals ? file << "true\n" : file << "false\n";
 
+    // Write true or false indicating if there's textures coordinates associated with the points
+    textures ? file << "true\n" : file << "false\n";
+
+    // Write vertexes to file
     for(Ponto p : points) {
         float px = p.getX();
         float py = p.getY();
@@ -34,6 +38,7 @@ void writePointsToFile(vector<Ponto> points, vector<Ponto>* normals, string file
         file << line;
     }
 
+    // If defined, write vertexes normals to file
     if (normals) {
         for(Ponto n : *normals) {
             float nx = n.getX();
@@ -41,6 +46,18 @@ void writePointsToFile(vector<Ponto> points, vector<Ponto>* normals, string file
             float nz = n.getZ();
 
             string line = to_string(nx) + ", " + to_string(ny) + ", " + to_string(nz) + "\n";
+            file << line;
+        }
+    }
+
+    // If defined, write vertexes texture coordinates to file
+    if (textures) {
+        vector<float> ts = *textures;
+        for (int i = 0; i < ts.size(); i+=2) {
+            float tx = ts[i];
+            float ty = ts[i+1];
+
+            string line = to_string(tx) + ", " + to_string(ty) + "\n";
             file << line;
         }
     }
@@ -214,6 +231,7 @@ int main(int argc, char** argv) {
 
     vector<Ponto> points;
     vector<Ponto> normals;
+    vector<float> textures;
     string fileString;
 
     if (argc == 2 && strcmp(argv[1], "--help") == 0) {
@@ -226,7 +244,7 @@ int main(int argc, char** argv) {
         fileString = argv[3];
         fileString = _3DFILESFOLDER + fileString;
 
-        writePointsToFile(points, nullptr, fileString);
+        writePointsToFile(points, nullptr, nullptr, fileString);
     }
     else if (argc >= 6 && strcmp(argv[1], "box") == 0) {
         int i = 2;
@@ -240,7 +258,7 @@ int main(int argc, char** argv) {
         fileString = argv[i]; // i=5 or 6
         fileString = _3DFILESFOLDER + fileString;
 
-        writePointsToFile(points, nullptr, fileString);
+        writePointsToFile(points, nullptr, nullptr, fileString);
     }
     else if (argc == 7 && strcmp(argv[1], "cone") == 0) {
         float radius = atof(argv[2]);
@@ -253,19 +271,19 @@ int main(int argc, char** argv) {
         fileString = argv[6];
         fileString = _3DFILESFOLDER + fileString;
 
-        writePointsToFile(points, nullptr, fileString);
+        writePointsToFile(points, nullptr, nullptr, fileString);
     }
     else if (argc == 6 && strcmp(argv[1], "sphere") == 0) {
         float radius = atof(argv[2]);
         int slices = atoi(argv[3]);
         int stacks = atoi(argv[4]);
 
-        sphere(radius, slices, stacks, &points, &normals);
+        sphere(radius, slices, stacks, &points, &normals, &textures);
 
         fileString = argv[5];
         fileString = _3DFILESFOLDER + fileString;
 
-        writePointsToFile(points, &normals, fileString);
+        writePointsToFile(points, &normals, &textures, fileString);
     }
     else if (argc == 7 && strcmp(argv[1], "torus") == 0) {
         float innerRadius = atof(argv[2]);
@@ -278,7 +296,7 @@ int main(int argc, char** argv) {
         fileString = argv[6];
         fileString = _3DFILESFOLDER + fileString;
 
-        writePointsToFile(points, &normals, fileString);
+        writePointsToFile(points, &normals, nullptr, fileString);
     }
     else if (argc == 5 && strcmp(argv[1], "--bezier") == 0) {
         string patchFileString = argv[2];
@@ -289,7 +307,7 @@ int main(int argc, char** argv) {
         bezierTo3DFile(patchFileString, tess_level, &points, &normals);
         
         _3dFileString = _3DFILESFOLDER + _3dFileString;
-        writePointsToFile(points, &normals, _3dFileString);
+        writePointsToFile(points, &normals, nullptr, _3dFileString);
     }
 
 }

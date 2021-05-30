@@ -7,6 +7,7 @@ Model load3dFile(string _3dFile) {
     ifstream file;
 	vector<float> points;
 	vector<float> normals;
+	vector<float> textures;
 
 	file.open(_3dFile.c_str(), ios::in);
 
@@ -18,6 +19,11 @@ Model load3dFile(string _3dFile) {
 	getline(file, line);
 	bool b_normals;
 	line == "true" ? b_normals = true : b_normals = false;
+
+	// Check if there's textures in the file
+	getline(file, line);
+	bool b_textures;
+	line == "true" ? b_textures = true : b_textures = false;
 
 	// Read from file
 	if (file.is_open()) {
@@ -47,6 +53,20 @@ Model load3dFile(string _3dFile) {
 			}
 		}
 
+		// Read textures from file
+		if (b_textures) {
+			for (int j = 0; j < nr_points; j++) {
+				getline(file, line);
+	
+				string token;
+    			istringstream tokenStream(line);
+
+    			while (getline(tokenStream, token, ',')) {
+					textures.push_back(atof(token.c_str()));
+				}
+			}
+		}
+
 		file.close();
 	}
 	else {
@@ -57,6 +77,7 @@ Model load3dFile(string _3dFile) {
 
 	GLuint p_vbo_ind;
 	GLuint n_vbo_ind = 0;
+	GLuint t_vbo_ind = 0;
 	
 	// Push points to VBO
 	glGenBuffers(1, &p_vbo_ind);
@@ -70,7 +91,14 @@ Model load3dFile(string _3dFile) {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW);
 	}
 
-	return Model(p_vbo_ind, n_vbo_ind, vertice_count);
+	if (b_textures) {
+		// Push textures to VBO
+		glGenBuffers(1, &t_vbo_ind);
+		glBindBuffer(GL_ARRAY_BUFFER, t_vbo_ind);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textures.size(), textures.data(), GL_STATIC_DRAW);
+	}
+
+	return Model(p_vbo_ind, n_vbo_ind, t_vbo_ind, vertice_count);
 }
 
 // Function to parse a float from an element attribute. If the attribute does not exist, returns the default value
@@ -308,20 +336,26 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 
 				// Get diffuse attributes
 				GLfloat* diffuse = parseDiffuseAttributes(model_element, 0.8);
+				model.setDiffuse(diffuse);
 
 				// Get specular attributes
 				GLfloat* specular = parseSpecularAttributes(model_element, 0.0);
+				model.setSpecular(specular);
 
 				// Get emissive attributes
 				GLfloat* emissive = parseEmissiveAttributes(model_element, 0.0);
+				model.setEmissive(emissive);
 
 				// Get ambient attributes
 				GLfloat* ambient = parseAmbientAttributes(model_element, 0.2);
-
-				model.setDiffuse(diffuse);
-				model.setSpecular(specular);
-				model.setEmissive(emissive);
 				model.setAmbient(ambient);
+
+				// Get texture attribute
+				const XMLAttribute* texture_attribute = model_element->FindAttribute("texture");
+				string texture_file;
+				texture_attribute ? texture_file = texture_attribute->Value() : texture_file = "";
+				
+				model.loadTexture(texture_file);
 				
 				new_group.addModel(model);
 			}

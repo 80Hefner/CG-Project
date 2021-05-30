@@ -20,7 +20,7 @@
 #include "utils/staticCamera.h"
 #include "utils/parser.h"
 
-#define XMLFILESFOLDER "../../filesXML/"
+#define XML_FILES_FOLDER "../../filesXML/"
 #define FPS_CAMERA_CFG_FILE "../../cfg/fpsCamera.cfg"
 #define STATIC_CAMERA_CFG_FILE "../../cfg/staticCamera.cfg"
 
@@ -313,7 +313,17 @@ void drawModel(Model m) {
 		glNormalPointer(GL_FLOAT, 0, 0);
 	}
 
+	// If defined, bind textures VBO
+	GLuint t_vbo_ind = m.getTVBOInd();
+	if (t_vbo_ind != 0) {
+		glBindBuffer(GL_ARRAY_BUFFER, t_vbo_ind);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		glBindTexture(GL_TEXTURE_2D, m.getTextureID());
+	}
+
 	glDrawArrays(GL_TRIANGLES, 0, m.getVerticeCount());
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 // * Print Functions * //
@@ -366,6 +376,7 @@ int main(int argc, char **argv) {
 		glutCreateWindow("CG - FASE 4");
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		// init GLEW
 		#ifndef __APPLE__
@@ -384,7 +395,7 @@ int main(int argc, char **argv) {
 
 		// load XML file
         string xmlFileString = argv[1];
-    	xmlFileString = XMLFILESFOLDER + xmlFileString;
+    	xmlFileString = XML_FILES_FOLDER + xmlFileString;
 		if (loadXMLFile(xmlFileString, &groups_vector, &lights_vector) == 0) {
 			std::cout << "Error reading XML File!\n";
 			return 0;
@@ -394,6 +405,7 @@ int main(int argc, char **argv) {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_NORMALIZE);
+		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 		// Enable lights parsed in XML file
 		for (int i = 0; i < lights_vector.size(); i++)
