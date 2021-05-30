@@ -139,7 +139,7 @@
             <translate X="0" Y="0" Z="1.3" />
             <scale  X="0.06" Y="0.06" Z="0.06" />
             <models>
-                <model file="sphere.3d" diffR="0.910" diffG="0.870" diffB="0.388" />
+                <model file="sphere.3d" texture="io.png" />
             </models>
         </group>
         <group> <!-- Europa -->
@@ -147,7 +147,7 @@
             <translate X="0.65" Y="0" Z="1.13" />
             <scale  X="0.06" Y="0.06" Z="0.06" />
             <models>
-                <model file="sphere.3d" diffR="0.537" diffG="0.290" diffB="0.161" />
+                <model file="sphere.3d" texture="europa.jpg" />
             </models>
         </group>
         <group> <!-- Ganymede -->
@@ -155,7 +155,7 @@
             <translate X="-0.65" Y="0" Z="1.13" />
             <scale  X="0.1" Y="0.1" Z="0.1" />
             <models>
-                <model file="sphere.3d" diffR="0.749" diffG="0.631" diffB="0.537" />
+                <model file="sphere.3d" texture="ganymede.png" />
             </models>
         </group>
         <group> <!-- Callisto -->
@@ -163,7 +163,7 @@
             <translate X="1.13" Y="0" Z="0.65" />
             <scale  X="0.1" Y="0.1" Z="0.1" />
             <models>
-                <model file="sphere.3d" diffR="0.110" diffG="0.043" diffB="0.169" />
+                <model file="sphere.3d" texture="callisto.jpg" />
             </models>
         </group>
 
