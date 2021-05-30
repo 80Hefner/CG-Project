@@ -1,5 +1,7 @@
 #include "parser.h"
 
+#define BIN_IMAGE_DIR "images/"
+
 // Function to load a .3d file into a VBO
 Model load3dFile(string _3dFile) {
     string line;
@@ -346,7 +348,7 @@ Group parseXMLGroupElement (XMLElement* main_element) {
 				string texture_file;
 				texture_attribute ? texture_file = texture_attribute->Value() : texture_file = "";
 				
-				model.loadTexture(texture_file);
+				model.loadTexture(BIN_IMAGE_DIR + texture_file);
 				
 				new_group.addModel(model);
 			}
