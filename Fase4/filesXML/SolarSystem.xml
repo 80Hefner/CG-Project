@@ -2,7 +2,7 @@
 
     <lights>
         <light type="POINT" posX="0" posY="0" posZ="0"
-                ambiR="0.4" ambiG="0.4" ambiB="0.4"
+                ambiR="0.5" ambiG="0.5" ambiB="0.5"
                 diffR="1.0" diffG="1.0" diffB="1.0"
                 specR="1.0" specG="1.0" specB="1.0" />
     </lights>
@@ -34,9 +34,10 @@
             <point X="0" Y="0" Z="-50" />
             <point X="-43" Y="-5" Z="-37" />
         </translate>
+        <rotate angle="90" axisX="-1" />
         <scale  X="0.3" Y="0.3" Z="0.3" />
         <models>
-            <model file="teapot.3d" diffR="0.808" diffG="0.808" diffB="0.808" />
+            <model file="teapot.3d" diffR="0.202" diffG="0.202" diffB="0.202" />
         </models>
     </group>
 
@@ -75,6 +76,7 @@
     </group>
 
     <group> <!-- Earth -->
+        <rotate time="10" axisY="1" />
         <translate X="0" Y="0" Z="14.5" />
         <rotate angle="23" axisX="1" />
         <rotate time="4" axisY="1" />
@@ -120,7 +122,7 @@
         <rotate time="100" axisY="1" />
         <scale Y="0.1" />
         <models>
-            <model file="asteroid_belt.3d" diffR="0.757" diffG="0.808" diffB="0.871" />
+            <model file="asteroid_belt.3d" texture="asteroid_belt.png" />
         </models>
     </group>
     
@@ -137,7 +139,7 @@
             <translate X="0" Y="0" Z="1.3" />
             <scale  X="0.06" Y="0.06" Z="0.06" />
             <models>
-                <model file="sphere.3d" diffR="0.910" diffG="0.870" diffB="0.388" texture="154.jpeg" />
+                <model file="sphere.3d" diffR="0.910" diffG="0.870" diffB="0.388" />
             </models>
         </group>
         <group> <!-- Europa -->
@@ -145,7 +147,7 @@
             <translate X="0.65" Y="0" Z="1.13" />
             <scale  X="0.06" Y="0.06" Z="0.06" />
             <models>
-                <model file="sphere.3d" diffR="0.537" diffG="0.290" diffB="0.161" texture="154.jpeg" />
+                <model file="sphere.3d" diffR="0.537" diffG="0.290" diffB="0.161" />
             </models>
         </group>
         <group> <!-- Ganymede -->
@@ -153,7 +155,7 @@
             <translate X="-0.65" Y="0" Z="1.13" />
             <scale  X="0.1" Y="0.1" Z="0.1" />
             <models>
-                <model file="sphere.3d" diffR="0.749" diffG="0.631" diffB="0.537" texture="154.jpeg" />
+                <model file="sphere.3d" diffR="0.749" diffG="0.631" diffB="0.537" />
             </models>
         </group>
         <group> <!-- Callisto -->
@@ -161,7 +163,7 @@
             <translate X="1.13" Y="0" Z="0.65" />
             <scale  X="0.1" Y="0.1" Z="0.1" />
             <models>
-                <model file="sphere.3d" diffR="0.110" diffG="0.043" diffB="0.169" texture="154.jpeg" />
+                <model file="sphere.3d" diffR="0.110" diffG="0.043" diffB="0.169" />
             </models>
         </group>
 
@@ -177,7 +179,7 @@
     <group> <!-- Saturn -->
         <rotate time="294.6" axisY="1" />
         <translate X="-30" Y="0" Z="51.96" />
-        <rotate angle="25" axisX="1" />
+        <rotate angle="25" axisX="-1" />
         <rotate time="1.5" axisY="1" />
         <scale  X="2.6" Y="2.6" Z="2.6" />
         <models>
@@ -186,7 +188,7 @@
         <group> <!-- Ring -->
             <scale Y="0.1" />
             <models>
-                <model file="saturn_ring.3d" diffR="0.757" diffG="0.808" diffB="0.871" />
+                <model file="saturn_ring.3d" texture="saturn_ring.png" />
             </models>
         </group>
     </group>
@@ -208,8 +210,9 @@
             <model file="sphere.3d" texture="uranus.jpg" />
         </models>
         <group> <!-- Ring -->
+            <scale Y="0.2" />
             <models>
-                <model file="uranus_ring.3d" diffR="0.820" diffG="0.208" diffB="0.008" />
+                <model file="uranus_ring.3d" diffR="0.410" diffG="0.104" diffB="0.004" />
             </models>
         </group>
     </group>
