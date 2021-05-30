@@ -16,7 +16,7 @@
     </group>
     
     <group> <!-- Sun -->
-        <rotate time="50" axisY="1" />
+        <rotate time="100" axisY="1" />
         <scale  X="4.5" Y="4.5" Z="4.5" />
         <models>
             <model file="sphere.3d" emisR="1.0" emisG="1.0" emisB="1.0" texture="sun.jpg" />
