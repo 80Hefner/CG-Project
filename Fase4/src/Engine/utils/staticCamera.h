@@ -1,13 +1,6 @@
 #ifndef STATIC_CAMERA_H
 #define STATIC_CAMERA_H
 
-#include <stdlib.h>
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
 #include <string>
 
 using namespace std;

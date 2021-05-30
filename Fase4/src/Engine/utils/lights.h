@@ -1,14 +1,6 @@
 #ifndef LIGHTS_H
 #define LIGHTS_H
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
-#include "../../utils/ponto.h"
-
 class Light {
     private:
         int index;

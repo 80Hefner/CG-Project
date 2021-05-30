@@ -1,4 +1,17 @@
+#include <stdlib.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+#include <string>
+#include <cmath>
 #include <sstream>
+#include <vector>
+
+#include "../../utils/float_vector.h"
+#include "../../lib/Matrix.tpp"
 
 #include "group.h"
 

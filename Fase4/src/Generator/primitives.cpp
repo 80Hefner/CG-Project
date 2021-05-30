@@ -1,12 +1,12 @@
 #define _USE_MATH_DEFINES 
 #include <math.h>
-#include <vector>
-#include <string.h>
+#include <string>
+
+#include "../utils/float_vector.h"
 
 #include "primitives.h"
 
 using namespace std;
-
 
 // Criação de um plano na superfície do plano XZ.
 vector<Ponto> plane(float size) {

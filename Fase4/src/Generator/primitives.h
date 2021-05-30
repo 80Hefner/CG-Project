@@ -4,9 +4,6 @@
 #include <vector>
 
 #include "../utils/ponto.h"
-#include "../utils/float_vector.h"
-
-using namespace std;
 
 vector<Ponto> plane(float size);
 vector<Ponto> box(float dimX, float dimY, float dimZ, int nrDivisoes);

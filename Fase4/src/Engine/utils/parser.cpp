@@ -1,6 +1,28 @@
+#include <stdlib.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glew.h>
+#include <GL/glut.h>
+#endif
+
+#include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+#include "model.h"
+#include "group.h"
+#include "lights.h"
+#include "../../lib/tinyxml2.h"
+
 #include "parser.h"
 
 #define BIN_IMAGE_DIR "images/"
+
+using namespace tinyxml2;
+using namespace std;
 
 // Function to load a .3d file into a VBO
 Model load3dFile(string _3dFile) {

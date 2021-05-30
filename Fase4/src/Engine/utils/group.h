@@ -1,24 +1,10 @@
 #ifndef GROUP_H
 #define GROUP_H
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
-#include <string>
-#include <vector>
-#include <cmath>
-
 #include "model.h"
 #include "../../utils/ponto.h"
-#include "../../utils/float_vector.h"
-#include "../../lib/Matrix.tpp"
 
 #define CATMULL_TESSELATION 0.01
-
-using namespace std;
 
 class Transformation {
     public:

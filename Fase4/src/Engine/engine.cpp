@@ -8,17 +8,19 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <string>
+#include <string.h>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
-#include "utils/model.h"
-#include "utils/group.h"
 #include "utils/fpsCamera.h"
-#include "utils/staticCamera.h"
+#include "utils/group.h"
+#include "utils/lights.h"
+#include "utils/model.h"
 #include "utils/parser.h"
+#include "utils/staticCamera.h"
+#include "../utils/ponto.h"
 
 #define XML_FILES_FOLDER "../../filesXML/"
 #define FPS_CAMERA_CFG_FILE "../../cfg/fpsCamera.cfg"

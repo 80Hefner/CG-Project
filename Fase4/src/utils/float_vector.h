@@ -1,8 +1,6 @@
 #ifndef FLOAT_VECTOR_H
 #define FLOAT_VECTOR_H
 
-#include <cmath>
-
 #include "ponto.h"
 
 void vector_cross(float* a, float* b, float* res);

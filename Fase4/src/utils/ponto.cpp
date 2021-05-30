@@ -1,10 +1,7 @@
-#include <string>
 #include <sstream>
 #include <vector>
 
 #include "ponto.h"
-
-using namespace std;
 
 Ponto::Ponto(float x, float y, float z) {
     this->x = x;

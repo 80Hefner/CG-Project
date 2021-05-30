@@ -5,15 +5,15 @@
 #include <fstream>
 #include <sstream>
 
-#include "../utils/ponto.h"
 #include "primitives.h"
+#include "../utils/ponto.h"
+#include "../utils/float_vector.h"
 #include "../lib/Matrix.tpp"
 
 #define _3DFILESFOLDER "../../files3D/"
 #define PATCHFILESFOLDER "../../filesPATCH/"
 
 using namespace std;
-
 
 void writePointsToFile(vector<Ponto> points, vector<Ponto>* normals, vector<float>* textures, string fileString) {
     ofstream file;

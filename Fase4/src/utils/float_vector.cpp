@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "float_vector.h"
 
 void vector_cross(float* a, float* b, float* res) {

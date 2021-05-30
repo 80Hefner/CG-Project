@@ -1,3 +1,12 @@
+#include <stdlib.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+#include "../../utils/ponto.h"
+
 #include "lights.h"
 
 void LightPoint::apply() {

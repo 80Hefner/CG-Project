@@ -7,13 +7,10 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <string>
 #include <iostream>
 #include <fstream>
 
 #include "staticCamera.h"
-
-using namespace std;
 
 staticCamera::staticCamera(string cfg_file_str) {
     loadCamera(cfg_file_str);
