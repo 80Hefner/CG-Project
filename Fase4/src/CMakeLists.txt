@@ -15,6 +15,7 @@ add_executable(${PROJECT_NAME} Engine/engine.cpp
 								Engine/utils/staticCamera.cpp
 								Engine/utils/parser.cpp
 								Engine/utils/lights.cpp
+								Engine/utils/model.cpp
 								lib/tinyxml2.cpp
 								utils/ponto.cpp
 								utils/float_vector.cpp)
@@ -88,3 +89,15 @@ else (WIN32) #Linux and Mac
 	endif (NOT GLUT_FOUND)
 
 endif(WIN32)
+
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/stars.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/sun.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/mercury.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/venus.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/earth.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/moon.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/mars.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/jupiter.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/saturn.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/uranus.jpg DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/../textures/neptune.jpg DESTINATION ${CMAKE_BINARY_DIR})

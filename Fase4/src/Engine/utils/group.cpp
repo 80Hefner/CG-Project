@@ -154,10 +154,20 @@ void DynamicTranslate::applyTransformations() {
 }
 
 void DynamicTranslate::renderCatmullRomCurve() {
-    //glColor3f(1.0f, 1.0f, 1.0f);
+    GLfloat grey[4] = {0.2, 0.2, 0.2, 1.0};
+    GLfloat zero[4] = {0.0, 0.0, 0.0, 0.0};
+
     glBegin(GL_LINE_LOOP);
+	
+    glMaterialfv(GL_FRONT, GL_AMBIENT, grey);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, zero);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, zero);
+	glMaterialfv(GL_FRONT, GL_EMISSION, zero);
+	glMaterialf(GL_FRONT, GL_SHININESS, 0);
+    
     //for (int i = 1; i < points.size()-2; i++) glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
     for (Ponto p : render_points) glVertex3f(p.getX(), p.getY(), p.getZ());
+    
     glEnd();
 }
 
