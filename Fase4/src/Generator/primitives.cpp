@@ -281,7 +281,7 @@ void sphere(float raio, int nrSlices, int nrStacks, vector<Ponto>* ps, vector<Po
 // Torus auxiliary function to generate a point in the surface
 Ponto generateTorusPoint(float innerRadius, float outerRadius , float alpha, float beta) {
 	return Ponto(cos(alpha) * (innerRadius * sin(beta) + outerRadius),
-					cos(beta) * innerRadius,
+					-cos(beta) * innerRadius,
 					sin(alpha) * (innerRadius * sin(beta) + outerRadius));
 }
 
@@ -291,10 +291,11 @@ Ponto generateTorusCenterPoint(float alpha, float outerRadius) {
 }
 
 // Creates a torus centered on origin
-void torus(float innerRadius, float outerRadius, int slices, int stacks, vector<Ponto>* ps, vector<Ponto>* ns) {
+void torus(float innerRadius, float outerRadius, int slices, int stacks, vector<Ponto>* ps, vector<Ponto>* ns, vector<float>* ts) {
 	
 	vector<Ponto> points;
 	vector<Ponto> normals;
+	vector<float> textures;
 
 	float alpha, alpha2, beta, beta2;
 
@@ -319,29 +320,50 @@ void torus(float innerRadius, float outerRadius, int slices, int stacks, vector<
 
 			// Adds the points of the two triangles associated to this slice and stack
 			points.push_back(p1);
-			points.push_back(p3);
 			points.push_back(p2);
+			points.push_back(p3);
 
 			points.push_back(p1);
-			points.push_back(p4);
 			points.push_back(p3);
+			points.push_back(p4);
 
 			// Adds the normals of the two triangles associated to this slice and stack
 			Ponto c_p1 = generateTorusCenterPoint(alpha, outerRadius);
 			Ponto c_p2 = generateTorusCenterPoint(alpha2, outerRadius);
 
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p1, c_p1)));
-			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p2, c_p1)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
 			
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p1, c_p1)));
-			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p4, c_p2)));
 			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p3, c_p2)));
+			normals.push_back(vector_normalize_ponto(vector_sub_ponto(p4, c_p2)));
+
+			// Adds the textures coordinates of the two triangles associated to this slice and stack
+			textures.push_back( beta / (2*M_PI) );
+			textures.push_back( alpha / (2*M_PI) );
+
+			textures.push_back( beta2 / (2*M_PI) );
+			textures.push_back( alpha / (2*M_PI) );
+
+			textures.push_back( beta2 / (2*M_PI) );
+			textures.push_back( alpha2 / (2*M_PI) );
+		
+
+			textures.push_back( beta / (2*M_PI) );
+			textures.push_back( alpha / (2*M_PI) );
+
+			textures.push_back( beta2 / (2*M_PI) );
+			textures.push_back( alpha2 / (2*M_PI) );
+
+			textures.push_back( beta / (2*M_PI) );
+			textures.push_back( alpha2 / (2*M_PI) );
 		}
 	}
 
 	*ps = points;
 	*ns = normals;
+	*ts = textures;
 }
 
 // Function that calculates the normal in p1, given two other points, following the right hand rule

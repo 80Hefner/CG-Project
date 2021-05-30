@@ -42,7 +42,7 @@ GLenum gl_face = GL_FRONT_AND_BACK;
 fpsCamera* fps_camera;
 staticCamera* static_camera;
 int camera_mode = 0; // 0 -> static   1 -> fps
-int draw_axis = 1;
+int draw_axis = 0;
 
 // FPS counter variables
 int timebase;
@@ -410,6 +410,8 @@ int main(int argc, char **argv) {
 		// Enable lights parsed in XML file
 		for (int i = 0; i < lights_vector.size(); i++)
 			glEnable(GL_LIGHT0 + (GLenum) i);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// init fps camera
 		fps_camera = new fpsCamera(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), FPS_CAMERA_CFG_FILE);

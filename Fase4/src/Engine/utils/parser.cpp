@@ -221,8 +221,7 @@ GLfloat* parseAmbientAttributes(XMLElement* element, GLfloat default_value) {
 	ambient[0] = parseFloatFromElementAttribute(element, "ambiR", default_value);
 	ambient[1] = parseFloatFromElementAttribute(element, "ambiG", default_value);
 	ambient[2] = parseFloatFromElementAttribute(element, "ambiB", default_value);
-
-	ambient[3] = 1.0;
+	ambient[3] = parseFloatFromElementAttribute(element, "ambiA", 1.0);
 
 	return ambient;
 }
@@ -235,8 +234,7 @@ GLfloat* parseDiffuseAttributes(XMLElement* element, GLfloat default_value) {
 	diffuse[0] = parseFloatFromElementAttribute(element, "diffR", default_value);
 	diffuse[1] = parseFloatFromElementAttribute(element, "diffG", default_value);
 	diffuse[2] = parseFloatFromElementAttribute(element, "diffB", default_value);
-
-	diffuse[3] = 1.0;
+	diffuse[3] = parseFloatFromElementAttribute(element, "diffA", 1.0);
 
 	return diffuse;
 }
@@ -249,8 +247,7 @@ GLfloat* parseSpecularAttributes(XMLElement* element, GLfloat default_value) {
 	specular[0] = parseFloatFromElementAttribute(element, "specR", default_value);
 	specular[1] = parseFloatFromElementAttribute(element, "specG", default_value);
 	specular[2] = parseFloatFromElementAttribute(element, "specB", default_value);
-
-	specular[3] = 1.0;
+	specular[3] = parseFloatFromElementAttribute(element, "specA", 1.0);
 
 	return specular;
 }
@@ -260,16 +257,10 @@ GLfloat* parseEmissiveAttributes(XMLElement* element, GLfloat default_value) {
 	const XMLAttribute* aux_attribute;
 	GLfloat* emissive = new GLfloat[4];
 	
-	// Get emisR attribute
 	emissive[0] = parseFloatFromElementAttribute(element, "emisR", default_value);
-
-	// Get emisG attribute
 	emissive[1] = parseFloatFromElementAttribute(element, "emisG", default_value);
-
-	// Get emisB attribute
 	emissive[2] = parseFloatFromElementAttribute(element, "emisB", default_value);
-
-	emissive[3] = 1.0;
+	emissive[3] = parseFloatFromElementAttribute(element, "emisA", 1.0);
 
 	return emissive;
 }

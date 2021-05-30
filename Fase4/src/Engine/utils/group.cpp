@@ -154,13 +154,13 @@ void DynamicTranslate::applyTransformations() {
 }
 
 void DynamicTranslate::renderCatmullRomCurve() {
-    GLfloat grey[4] = {0.2, 0.2, 0.2, 1.0};
+    GLfloat grey[4] = {0.1, 0.1, 0.1, 1.0};
     GLfloat zero[4] = {0.0, 0.0, 0.0, 0.0};
 
     glBegin(GL_LINE_LOOP);
 	
     glMaterialfv(GL_FRONT, GL_AMBIENT, grey);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, zero);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, grey);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, zero);
 	glMaterialfv(GL_FRONT, GL_EMISSION, zero);
 	glMaterialf(GL_FRONT, GL_SHININESS, 0);

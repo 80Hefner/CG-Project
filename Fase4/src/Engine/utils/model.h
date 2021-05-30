@@ -51,9 +51,9 @@ class Model {
 
         GLuint getTextureID() {return this->texture_id;};
 
-        GLfloat* getDiffuse() {return this->diffuse;};
         GLfloat* getAmbient() {return this->ambient;};
         GLfloat* getSpecular() {return this->specular;};
+        GLfloat* getDiffuse() {return this->diffuse;};
         GLfloat* getEmissive() {return this->emissive;};
         GLfloat getShininess() {return this->shininess;};
 

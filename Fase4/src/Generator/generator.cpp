@@ -291,12 +291,12 @@ int main(int argc, char** argv) {
         int slices = atoi(argv[5]);
         int stacks = atoi(argv[4]);
 
-        torus(innerRadius, outerRadius, slices, stacks, &points, &normals);
+        torus(innerRadius, outerRadius, slices, stacks, &points, &normals, &textures);
 
         fileString = argv[6];
         fileString = _3DFILESFOLDER + fileString;
 
-        writePointsToFile(points, &normals, nullptr, fileString);
+        writePointsToFile(points, &normals, &textures, fileString);
     }
     else if (argc == 5 && strcmp(argv[1], "--bezier") == 0) {
         string patchFileString = argv[2];
