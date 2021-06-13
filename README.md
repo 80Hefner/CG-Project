@@ -1,2 +1,2 @@
-# CG
-CG's Project
+# CG-Project
+Computação Gráfica [20-21]
